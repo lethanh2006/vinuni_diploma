@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useRouter } from "next/router";
-import { Button, Col, Drawer, Icon, Menu, Row, Dropdown } from "antd";
+import { Button, Col, Drawer, Menu, Row, Dropdown } from "antd";
 import axios from "axios";
 import Box from "components/Box";
 import ScrollSpyMenu from "components/ScrollSpyMenu";
@@ -329,7 +329,7 @@ const Navbar = ({ navbarStyle, logoStyle, button, row, menuWrapper }) => {
         >
           {item.nganhDaoTao.map((e, ind) => (
             <Item>
-              <Link href={`/nganhhoc/${e?.maNganh ?? ""}`}>
+              <Link legacyBehavior href={`/nganhhoc/${e?.maNganh ?? ""}`}>
                 <a style={{ fontSize: isDesktop ? 14 : 18 }}>
                   {e?.tenNganh ?? ""}
                 </a>
@@ -351,17 +351,17 @@ const Navbar = ({ navbarStyle, logoStyle, button, row, menuWrapper }) => {
       offset: "70",
       submenu: [
         <Item>
-          <Link href="/doinguchitiet">
+          <Link legacyBehavior href="/doinguchitiet">
             <a style={{ fontSize: isDesktop ? 14 : 18 }}>{t("menu.staff")}</a>
           </Link>
         </Item>,
         <Item>
-          <Link href="/chucnangnhiemvu">
+          <Link legacyBehavior href="/chucnangnhiemvu">
             <a style={{ fontSize: isDesktop ? 14 : 18 }}>{t("menu.functions")}</a>
           </Link>
         </Item>,
         <Item>
-          <Link href="/quychequydinh">
+          <Link legacyBehavior href="/quychequydinh">
             <a style={{ fontSize: isDesktop ? 14 : 18 }}>{t("menu.regulations")}</a>
           </Link>
         </Item>,
@@ -384,7 +384,7 @@ const Navbar = ({ navbarStyle, logoStyle, button, row, menuWrapper }) => {
           </a>
         </Item>,
         <Item>
-          <Link href="/chungchi">
+          <Link legacyBehavior href="/chungchi">
             <a
               style={{ fontSize: isDesktop ? 14 : 18 }}
               onClick={() => window.open("https://tuyensinh.ptit.edu.vn/")}
@@ -416,7 +416,7 @@ const Navbar = ({ navbarStyle, logoStyle, button, row, menuWrapper }) => {
           </a>
         </Item>,
         <Item>
-          <Link href="/chungchi">
+          <Link legacyBehavior href="/chungchi">
             <a style={{ fontSize: isDesktop ? 14 : 18 }}>{t("menu.lookup_english")}</a>
           </Link>
         </Item>,

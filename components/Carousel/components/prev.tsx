@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Icon } from "antd";
+import Icon from "@ant-design/icons";
 import React from "react";
 
 const iconSVG = (size) => (

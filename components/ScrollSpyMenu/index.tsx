@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { Icon, Menu, notification } from "antd";
+import { CloseCircleOutlined } from "@ant-design/icons";
+import { Menu, notification } from "antd";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React, { useContext } from "react";
@@ -37,7 +38,7 @@ const ScrollSpyMenu = ({
     notification.open({
       message: "Chức năng đang trong quá trình phát triển",
       placement: "bottomRight",
-      icon: <Icon type="close-circle" style={{ color: "red" }} />,
+      icon: <CloseCircleOutlined style={{ color: "red" }} />,
     });
   };
 
@@ -112,7 +113,7 @@ const ScrollSpyMenu = ({
           if (menu.redirect) {
             return (
               <Item>
-                <Link href={`${menu.path}`}>
+                <Link legacyBehavior href={`${menu.path}`}>
                   <a
                     style={{
                       fontSize: isDesktop ? 14 : 18,
@@ -128,7 +129,7 @@ const ScrollSpyMenu = ({
           } else {
             return (
               <Item>
-                <Link href={`/${menu.path}`}>
+                <Link legacyBehavior href={`/${menu.path}`}>
                   <a
                     style={{
                       fontSize: isDesktop ? 14 : 18,

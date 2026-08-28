@@ -85,7 +85,7 @@ const TinTuc = ({ }) => {
                 textAlign: "center",
               }}
             >
-              <Link href="/tintuc/[pid]">
+              <Link legacyBehavior href="/tintuc/[pid]">
                 <a
                   style={{
                     width: "135",

@@ -176,27 +176,24 @@ const TinTuc = ({ dataDeAn, dataMucLuc }) => {
 };
 
 export async function getServerSideProps({}) {
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
+  try {
+    let response = await axios.get(
+      `${ip}/hdsd/content-structure/606aec55e9bd5ae27358f96d/?hasContent=1`
+    );
+    const dataDeAn = _.get(response, "data.data", {});
 
-  let response = await axios.get(
-    `${ip}/hdsd/content-structure/606aec55e9bd5ae27358f96d/?hasContent=1`
-  );
-  const dataDeAn = _.get(response, "data.data", {});
+    let responseMucLuc = await axios.get(
+      `${ip}/hdsd/content-structure/606aec55e9bd5ae27358f96d`
+    );
+    const dataMucLuc = (_.get(responseMucLuc, "data.data", {}) || []).filter(
+      (item) => item.depth < 3 && item?.depth > 0
+    );
 
-  let responseMucLuc = await axios.get(
-    `${ip}/hdsd/content-structure/606aec55e9bd5ae27358f96d`
-  );
-  const dataMucLuc = _.get(responseMucLuc, "data.data", {}).filter(
-    (item) => item.depth < 3 && item?.depth > 0
-  );
-
-  return {
-    props: {
-      dataDeAn,
-      dataMucLuc,
-    },
-  };
+    return { props: { dataDeAn, dataMucLuc } };
+  } catch (error) {
+    console.error("deantuyensinh getServerSideProps", error?.message || error);
+    return { props: { dataDeAn: {}, dataMucLuc: [] } };
+  }
 }
 
 export default TinTuc;

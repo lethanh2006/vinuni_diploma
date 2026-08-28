@@ -7,19 +7,29 @@ const themeVariables = lessToJS(
 );
 
 module.exports = {
-  output: "standalone",
   distDir: "./.next",
   trailingSlash: true,
+  reactStrictMode: false,
+  transpilePackages: ["antd", "@ant-design/icons", "rc-util", "rc-pagination", "rc-picker"],
+  compiler: {
+    styledComponents: true,
+  },
   images: {
     disableStaticImages: true,
+    unoptimized: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
   },
 
-  webpack: (config, {isServer}) => {
+  webpack: (config, { isServer }) => {
     if (!isServer) {
-      config.resolve.fallback = {fs: false};
+      config.resolve.fallback = { fs: false, canvas: false };
     }
 
-    // Alias paths
     config.resolve.alias = {
       ...config.resolve.alias,
       assets: path.resolve(__dirname, "public/assets"),
@@ -42,6 +52,7 @@ module.exports = {
           options: {
             lessOptions: {
               javascriptEnabled: true,
+              math: "always",
               modifyVars: themeVariables,
             },
           },

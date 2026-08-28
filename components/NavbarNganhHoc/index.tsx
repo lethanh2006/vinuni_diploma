@@ -98,7 +98,7 @@ class Navbar extends React.Component {
                                 key={tenChuyenNganh}
                                 style={{ fontSize: 16, padding: 8 }}
                               >
-                                <Link
+                                <Link legacyBehavior
                                   href={`/nganhhoc/[idMaNganh]#${anchor}`}
                                   as={`/nganhhoc/${maNganh}#${anchor}`}
                                 >
@@ -115,7 +115,7 @@ class Navbar extends React.Component {
                     } else {
                       return (
                         <MenuItem key={name} style={{ backgroundColor: "red" }}>
-                          <Link
+                          <Link legacyBehavior
                             href={`/nganhhoc/[idMaNganh]${url}`}
                             as={`/nganhhoc/${maNganh}${url}`}
                           >

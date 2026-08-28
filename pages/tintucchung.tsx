@@ -26,16 +26,15 @@ export function Format(str) {
     .replace(/\s/g, "");
 }
 
-const TinTucVBCC = ({ loaiBaiViet }) => {
+const TinTucVBCC = ({ loaiBaiViet = [] }) => {
   const router = useRouter();
+  const firstLoai = loaiBaiViet?.[0];
   const [data, setData] = useState([]);
-  const [key, setKey] = useState(loaiBaiViet[0].maLoai);
+  const [key, setKey] = useState(firstLoai?.maLoai);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [cond, setCond] = useState({
-    // TIN_TUC_CAP_PHAT_VBCC
-    // // TIN_TUC_LICH_THI_TA
-    maLoaiBaiViet: loaiBaiViet[0].maLoai,
+    maLoaiBaiViet: firstLoai?.maLoai,
   });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(16);
@@ -143,19 +142,22 @@ const TinTucVBCC = ({ loaiBaiViet }) => {
 export default TinTucVBCC;
 
 export async function getServerSideProps() {
-  // Fetch data from external API
-  let response = await axios.get(`${ip}/loai-bai-viet`, {
-    params: {
-      cond: {
-        $and: [
-          { maLoai: { $regex: "DAO_TAO_TIN_TUC_" } },
-          { maLoai: { $ne: "DAO_TAO_TIN_TUC_BA_CONG_KHAI" } },
-          // { maLoai: { $ne: "DAO_TAO_TIN_TUC_LICH_THI_TA" } },
-          { maLoai: { $ne: "DAO_TAO_TIN_TUC_DINH_HUONG" } },
-        ],
+  try {
+    let response = await axios.get(`${ip}/loai-bai-viet`, {
+      params: {
+        cond: {
+          $and: [
+            { maLoai: { $regex: "DAO_TAO_TIN_TUC_" } },
+            { maLoai: { $ne: "DAO_TAO_TIN_TUC_BA_CONG_KHAI" } },
+            { maLoai: { $ne: "DAO_TAO_TIN_TUC_DINH_HUONG" } },
+          ],
+        },
       },
-    },
-  });
-  const loaiBaiViet = _.get(response, "data.data", {});
-  return { props: { loaiBaiViet } };
+    });
+    const loaiBaiViet = _.get(response, "data.data", []);
+    return { props: { loaiBaiViet: Array.isArray(loaiBaiViet) ? loaiBaiViet : [] } };
+  } catch (error) {
+    console.error("tintucchung getServerSideProps", error?.message || error);
+    return { props: { loaiBaiViet: [] } };
+  }
 }

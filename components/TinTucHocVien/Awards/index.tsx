@@ -98,7 +98,7 @@ const AwardsSection = ({ data }) => {
               textAlign: "center",
             }}
           >
-            <Link href="tintucchung">
+            <Link legacyBehavior href="tintucchung">
               <a
                 style={{
                   width: "135",

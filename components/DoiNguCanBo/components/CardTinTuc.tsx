@@ -15,7 +15,7 @@ class CardTinTuc extends PureComponent {
       return s;
     };
     return (
-      <Link href="/tintuc/[pid]" as={'/tintuc/' + href}>
+      <Link legacyBehavior href="/tintuc/[pid]" as={'/tintuc/' + href}>
         <a>
           <div style={{ ...styles, backgroundColor: 'white', width: '100%' }}>
             <CardImgWrapper>

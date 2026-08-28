@@ -90,7 +90,7 @@ class CardTinTuc extends PureComponent {
 					</h5>
 				</div>
 				<Modal
-					visible={visible && play}
+					open={visible && play}
 					width={isMobile ? '90%' : '70%'}
 					title={title}
 					onCancel={this.handleModal}

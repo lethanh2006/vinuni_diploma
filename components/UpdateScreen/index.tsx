@@ -161,7 +161,7 @@ const UpdateScreen = ({
                   {relate.map((item, index) => (
                     <Col Col xl={8} md={12} xs={24} key={index + 1}>
                       <Row>
-                        <Link href="/nganhhoc/[idMaNganh]" as={'/nganhhoc/' + `${_.get(item, 'maNganh', '')}`} >
+                        <Link legacyBehavior href="/nganhhoc/[idMaNganh]" as={'/nganhhoc/' + `${_.get(item, 'maNganh', '')}`} >
                           <a style={{ color: '#fff' }} target="_blank" >
                             <Col md={6} xs={8}  >
                               <img

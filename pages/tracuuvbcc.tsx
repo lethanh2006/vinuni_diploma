@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Col, Modal, Row, Spin } from "antd";
+import { Modal, Spin } from "antd";
 import axios from "axios";
 import FormTraCuu from "components/Table/FormTraCuuVBCC";
 import TableTraCuuVBCC from "components/Table/TableTraCuuVBCC";
@@ -15,7 +15,7 @@ import ChiTietVanBang from "./vanbangchungchi/[idChiTiet]";
 
 const TraCuuVanBangChungChi = (props) => {
   const { t } = useTranslation();
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isMobile = useMediaQuery({ maxWidth: 767 }) === true;
 
   const [ds, setds] = useState([]);
   const [loading, setloading] = useState(false);
@@ -71,85 +71,50 @@ const TraCuuVanBangChungChi = (props) => {
   };
 
   return (
-    <Row style={{ width: "100%" }}>
+    <div style={{ width: "100%" }}>
       <Spin spinning={!!loading}>
         <SectionWrapper id="daotao" className="vbcc-montserrat">
-          {isMobile && (
-            <Container fullWidth noGutter>
-              <div
-                style={{ ...heroBackgroundStyle, padding: "124px 16px 24px" }}
-              >
-                <div style={{ width: "100%", margin: "0 auto" }}>
-                  <div style={{ marginBottom: 12 }}>{tieuDeKQ}</div>
-                  <div style={{ width: "100%" }}>
-                    <FormTraCuu
-                      onSubmit={(values) => traCuu(values)}
-                      onReset={() => {
-                        setds([]);
-                        setSelectedId(null);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              {selectedId ? (
-                <ChiTietVanBang
-                  id={selectedId}
-                  onBack={() => setSelectedId(null)}
-                />
-              ) : (
-                <TableTraCuuVBCC
-                  thongTinTraCuu={ds}
-                  onViewDetail={(id) => setSelectedId(id)}
-                />
-              )}
-            </Container>
-          )}
-          {!isMobile && (
-            <Container fullWidth noGutter>
+          <Container fullWidth noGutter>
+            <div
+              style={{
+                ...heroBackgroundStyle,
+                padding: isMobile ? "124px 16px 24px" : "205px 24px 93px 24px",
+              }}
+            >
               <div
                 style={{
-                  ...heroBackgroundStyle,
-                  padding: "205px 24px 93px 24px",
+                  maxWidth: isMobile ? "100%" : "1100px",
+                  width: "100%",
+                  margin: "0 auto",
                 }}
               >
-                <div
-                  style={{
-                    maxWidth: "1100px",
-                    width: "100%",
-                    margin: "0 auto",
-                  }}
-                >
-                  <Col lg={24} style={{ marginBottom: 50 }}>
-                    {tieuDeKQ}
-                  </Col>
-                  <div style={{ width: "100%" }}>
-                    <FormTraCuu
-                      onSubmit={(values) => traCuu(values)}
-                      onReset={() => {
-                        setds([]);
-                        setSelectedId(null);
-                      }}
-                    />
-                  </div>
+                <div style={{ marginBottom: isMobile ? 12 : 50 }}>{tieuDeKQ}</div>
+                <div style={{ width: "100%" }}>
+                  <FormTraCuu
+                    onSubmit={(values) => traCuu(values)}
+                    onReset={() => {
+                      setds([]);
+                      setSelectedId(null);
+                    }}
+                  />
                 </div>
               </div>
-              {selectedId ? (
-                <ChiTietVanBang
-                  id={selectedId}
-                  onBack={() => setSelectedId(null)}
-                />
-              ) : (
-                <TableTraCuuVBCC
-                  thongTinTraCuu={ds}
-                  onViewDetail={(id) => setSelectedId(id)}
-                />
-              )}
-            </Container>
-          )}
+            </div>
+            {selectedId ? (
+              <ChiTietVanBang
+                id={selectedId}
+                onBack={() => setSelectedId(null)}
+              />
+            ) : (
+              <TableTraCuuVBCC
+                thongTinTraCuu={ds}
+                onViewDetail={(id) => setSelectedId(id)}
+              />
+            )}
+          </Container>
         </SectionWrapper>
       </Spin>
-    </Row>
+    </div>
   );
 };
 

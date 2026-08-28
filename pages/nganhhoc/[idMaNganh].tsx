@@ -243,28 +243,20 @@ const NganhHoc = ({ dataFetch, params }) => {
 // }
 
 export async function getServerSideProps({ params }) {
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
-  // chi tiết bài viết
-  // console.log(response, 'tin tuc bai viet');
-  // relate
-  const response = await axios.get(`${ip}/dao-tao/nganh-hoc`, {
-    params: {
-      cond: {
-        maNganh: params.idMaNganh,
+  try {
+    const response = await axios.get(`${ip}/dao-tao/nganh-hoc`, {
+      params: {
+        cond: {
+          maNganh: params.idMaNganh,
+        },
       },
-    },
-  });
-  const dataFetch = _.get(response, "data.data", {});
-
-  // By returning { props: data }, the Blog component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      dataFetch,
-      params,
-    },
-  };
+    });
+    const dataFetch = _.get(response, "data.data", {});
+    return { props: { dataFetch, params } };
+  } catch (error) {
+    console.error("nganhhoc getServerSideProps", error?.message || error);
+    return { props: { dataFetch: {}, params } };
+  }
 }
 
 export default NganhHoc;

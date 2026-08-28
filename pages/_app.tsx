@@ -1,4 +1,5 @@
 // @ts-nocheck
+import "data/axios-compat";
 import React, { Fragment } from 'react';
 import { Modal } from '@redq/reuse-modal';
 import '@redq/reuse-modal/es/index.css';

@@ -133,7 +133,7 @@ const DoiNgu = ({ button, buttonWrapper, data }) => {
               textAlign: "center",
             }}
           >
-            <Link href="doinguchitiet">
+            <Link legacyBehavior href="doinguchitiet">
               <a
                 style={{
                   width: "135",

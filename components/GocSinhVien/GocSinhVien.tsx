@@ -102,7 +102,7 @@ const GocSinhVien = ({ data }) => {
                   backgroundColor: '#FFFFFF'
                 }}
               >
-                <Link href="tintucchung#dao_tao_tin_tuc_goc_sinh_vien">
+                <Link legacyBehavior href="tintucchung#dao_tao_tin_tuc_goc_sinh_vien">
                   <a
                     style={{
                       width: '135',

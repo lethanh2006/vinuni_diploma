@@ -6,6 +6,26 @@ const SectionWrapper = styled.section`
     font-family: 'Montserrat', sans-serif;
   }
 
+  .vbcc-form .ant-form-item-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    flex-wrap: nowrap !important;
+  }
+  .vbcc-form .ant-form-item-label {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 0 4px !important;
+    text-align: left !important;
+    flex: none !important;
+  }
+  .vbcc-form .ant-form-item-control {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none !important;
+  }
+
   @media (max-width: 990px) {
     padding: 80px 0 40px 0;
   }

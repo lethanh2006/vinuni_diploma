@@ -8,52 +8,45 @@ import React, { useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Box from 'components/Box';
 
-const DangKi = (props) => {
+const DangKi = () => {
+  const [form] = Form.useForm();
   const recaptchaRef = useRef(null);
 
-  const { getFieldDecorator } = props.form;
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const recapchaValue = recaptchaRef.current.getValue();
+  const handleFinish = (values) => {
+    const recapchaValue = recaptchaRef.current?.getValue();
     console.log('recapchaValue', recapchaValue);
-    props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
+    console.log('Received values of form: ', values);
   };
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
+
   return (
     <Box style={{ marginTop: '120px' }}>
       <Container>
         <Row>
           <Col lg={18} style={{ marginLeft: '40px' }}>
             <Card title="Tra cứu kết quả thi Tiếng Anh">
-              <Form onSubmit={handleSubmit}>
+              <Form form={form} onFinish={handleFinish}>
                 <Row>
                   <Col lg={20}>
-                    <Form.Item label="Họ và Tên">
-                      {getFieldDecorator('hoTen', {
-                        // initialValue: model.edit ? _.get(model.record, 'maSv', '') : '',
-                        rules: [...rules.length(50), ...rules.text],
-                      })(<Input />)}
+                    <Form.Item
+                      name="hoTen"
+                      label="Họ và Tên"
+                      rules={[...rules.length(50), ...rules.text]}
+                    >
+                      <Input />
                     </Form.Item>
                   </Col>
                   <Col lg={20}>
-                    <Form.Item label="Ngày Sinh">
-                      {getFieldDecorator('ngaySinh', {
-                        // initialValue: model.edit ? _.get(model.record, 'maSv', '') : '',
-                      })(<DatePicker />)}
+                    <Form.Item name="ngaySinh" label="Ngày Sinh">
+                      <DatePicker />
                     </Form.Item>
                   </Col>
                   <Col lg={20}>
-                    <Form.Item label="Số hiệu VB">
-                      {getFieldDecorator('soHieuVB', {
-                        // initialValue: model.edit ? _.get(model.record, 'maSv', '') : '',
-                        rules: [...rules.length(20), ...rules.text],
-                      })(<Input />)}
+                    <Form.Item
+                      name="soHieuVB"
+                      label="Số hiệu VB"
+                      rules={[...rules.length(20), ...rules.text]}
+                    >
+                      <Input />
                     </Form.Item>
                   </Col>
                 </Row>
@@ -68,7 +61,6 @@ const DangKi = (props) => {
                   <ReCAPTCHA
                     ref={recaptchaRef}
                     sitekey="6LcTyrcZAAAAAPp--P8E1xuz9SpJGsypdEX8vAk-"
-                    // onChange={onChange}
                   />
                   <Button type="primary" htmlType="submit">
                     Search
@@ -83,6 +75,4 @@ const DangKi = (props) => {
   );
 };
 
-const FormDangKy = Form.create({ name: 'regis_form' })(DangKi);
-
-export default FormDangKy;
+export default DangKi;

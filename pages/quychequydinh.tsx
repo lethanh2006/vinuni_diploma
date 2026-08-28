@@ -170,40 +170,32 @@ const TinTuc = ({ data, relate }) => {
 };
 
 export async function getServerSideProps({ params }) {
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
-
-  // chi tiết bài viết
-  let response = await axios.get(`${ip}/bai-viet`, {
-    params: {
-      page: 1,
-      limit: 4,
-      cond: {
-        maLoaiBaiViet: "DAO_TAO_TIN_TUC_ QUY_CHE_QUY_DINH",
+  try {
+    let response = await axios.get(`${ip}/bai-viet`, {
+      params: {
+        page: 1,
+        limit: 4,
+        cond: {
+          maLoaiBaiViet: "DAO_TAO_TIN_TUC_ QUY_CHE_QUY_DINH",
+        },
       },
-    },
-  });
-  // console.log(response, 'tin tuc bai viet');
-  const data = _.get(response, "data.data[0]", {});
-  // relate
-  response = await axios.get(`${ip}/bai-viet`, {
-    params: {
-      page: 1,
-      limit: 4,
-      cond: {
-        maLoaiBaiViet: "DAO_TAO_TIN_TUC_ QUY_CHE_QUY_DINH",
+    });
+    const data = _.get(response, "data.data[0]", {});
+    response = await axios.get(`${ip}/bai-viet`, {
+      params: {
+        page: 1,
+        limit: 4,
+        cond: {
+          maLoaiBaiViet: "DAO_TAO_TIN_TUC_ QUY_CHE_QUY_DINH",
+        },
       },
-    },
-  });
-  const relate = _.get(response, "data.data", []);
-  // By returning { props: data }, the Blog component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      data,
-      relate,
-    },
-  };
+    });
+    const relate = _.get(response, "data.data", []);
+    return { props: { data, relate } };
+  } catch (error) {
+    console.error("quychequydinh getServerSideProps", error?.message || error);
+    return { props: { data: {}, relate: [] } };
+  }
 }
 
 export default TinTuc;

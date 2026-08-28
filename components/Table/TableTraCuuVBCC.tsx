@@ -79,7 +79,7 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
               </svg>
             </a>
           ) : (
-            <Link href={rec?.DuLieu?._id ? `/vanbangchungchi/${rec.DuLieu._id}` : "#"} passHref>
+            <Link legacyBehavior href={rec?.DuLieu?._id ? `/vanbangchungchi/${rec.DuLieu._id}` : "#"} passHref>
               <a
                 style={{
                   display: "inline-flex",

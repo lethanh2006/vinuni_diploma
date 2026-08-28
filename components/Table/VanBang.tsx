@@ -172,7 +172,7 @@ export default function VanBangTable(props) {
       />
       <Modal
         title="Thông tin chi tiết"
-        visible={show}
+        open={show}
         onOk={onCloseModal}
         onCancel={onCloseModal}
         cancelText="Đóng"

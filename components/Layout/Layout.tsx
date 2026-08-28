@@ -3,7 +3,8 @@
 // import { DrawerProvider } from 'common/src/contexts/DrawerContext';
 // import Navbar from 'common/src/containers/Hosting/Navbar';
 // import Footer from 'common/src/components/Footer/index';
-import { Affix, Button, Icon } from "antd";
+import { ArrowUpOutlined } from "@ant-design/icons";
+import { Affix, Button } from "antd";
 import { ResetCSS } from "assets/css/style";
 import Navbar from "components/Navbar";
 // import Navbar from '../../../common/src/containers/Hosting/Navbar'
@@ -70,7 +71,7 @@ export default function Layout({ children, home }) {
                 }}
                 onClick={scrollToTop}
               >
-                <Icon type="arrow-up" />
+                <ArrowUpOutlined />
               </Button>
             </Affix>
           </ContentWrapper>

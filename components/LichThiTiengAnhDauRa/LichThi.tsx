@@ -117,7 +117,7 @@ const LichThi = ({}) => {
                             </ContentWrapper>
                           </Col>
                           <div style={{ position: "relative" }}>
-                            {/* <Link href="chucnangdangpt">
+                            {/* <Link legacyBehavior href="chucnangdangpt">
 															<a
 																className="button-more"
 																// href="tintucchung"

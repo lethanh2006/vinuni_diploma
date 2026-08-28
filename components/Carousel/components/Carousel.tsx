@@ -1,7 +1,8 @@
 // @ts-nocheck
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { Carousel, Icon, Spin } from 'antd';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Carousel, Spin } from 'antd';
 import Container from 'components/UI/Container';
 import React, { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -84,8 +85,7 @@ const TestimonialSection = ({
                                   className={styles.buttonCarousel}
                                   onClick={() => ref.prev()}
                                 >
-                                  <Icon
-                                    type="left"
+                                  <LeftOutlined
                                     style={{ fontSize: 40, color: 'white' }}
                                   />
                                 </div>
@@ -98,8 +98,7 @@ const TestimonialSection = ({
                                   className={styles.buttonCarousel}
                                   onClick={() => ref.next()}
                                 >
-                                  <Icon
-                                    type="right"
+                                  <RightOutlined
                                     style={{ fontSize: 40, color: 'white' }}
                                   />
                                 </div>

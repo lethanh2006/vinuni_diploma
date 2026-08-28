@@ -12,6 +12,8 @@ export const ResetCSS = createGlobalStyle`
     box-sizing: border-box;
     -ms-overflow-style: scrollbar;
     scroll-margin-top: 50px;
+    color-scheme: light;
+    background: #ffffff;
   }
 
   *,
@@ -56,6 +58,8 @@ export const ResetCSS = createGlobalStyle`
     padding: 0;
     overflow-x: hidden;
     -webkit-tap-highlight-color: transparent;
+    background: #ffffff;
+    color: #202124;
   }
 
   ul {
