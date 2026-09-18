@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 import { Row, Col, Modal, Button } from 'antd';
 import { enquireScreen } from 'enquire-js';
 import { CardImgWrapper, WrapperImg } from './Card.style';
+import { sanitizeHtml } from "components/Utils/htmlSecurity";
 
 let isMobile;
 enquireScreen((b) => {
@@ -107,7 +108,7 @@ class CardTinTuc extends PureComponent {
 					{/* Nội Dung */}
 					<div
 						style={{ marginTop: 20, textAlign: 'center', fontSize: 'calc(0.8em + 0.3vw)' }}
-						dangerouslySetInnerHTML={{ __html: noiDung }}
+						dangerouslySetInnerHTML={{ __html: sanitizeHtml(noiDung) }}
 					/>
 				</Modal>
 			</div>

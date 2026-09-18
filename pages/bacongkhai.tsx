@@ -20,6 +20,7 @@ import Sticky from "react-stickynode";
 import Box from "components/Box";
 import { NextSeo } from "next-seo";
 import { TitleLinkWrapper } from "styles/baiviet.style";
+import { sanitizeHtml, sanitizeInternalPathSegment } from "components/Utils/htmlSecurity";
 
 // moment().locale('vi');
 
@@ -31,10 +32,14 @@ const TinTuc = ({ data, relate }) => {
   const ngayDang = _.get(data, "ngayDang", "");
   const tieuDe = _.get(data, "tieuDe", "");
   const moTa = _.get(data, "moTa", "");
-  const noiDung = _.get(data, "noiDung", "");
+  const noiDung = sanitizeHtml(_.get(data, "noiDung", ""));
   const nguoiDang = _.get(data, "nguoiDang.hoTen", "");
   const anhDaiDien = _.get(data, "anhDaiDien", "");
   const slug = _.get(data, "slug", "");
+  const toTinTucHref = (rawSlug) => {
+    const safeSlug = sanitizeInternalPathSegment(rawSlug);
+    return safeSlug ? `/tintuc/${safeSlug}` : "#";
+  };
   const renderTitle = (title) => {
     if (title <= 105) {
       return title;
@@ -149,7 +154,7 @@ const TinTuc = ({ data, relate }) => {
                           }
                           title={
                             <TitleLinkWrapper
-                              href={`/tintuc/${_.get(item, "slug", "")}`}
+                              href={toTinTucHref(_.get(item, "slug", ""))}
                               style={{ textAlign: "justify" }}
                             >
                               {renderTitle(_.get(item, "tieuDe", ""))}

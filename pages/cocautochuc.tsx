@@ -11,6 +11,7 @@ import { enquireScreen } from "enquire-js";
 import React, { useEffect, useState } from "react";
 import Sticky from "react-stickynode";
 import Box from "components/Box";
+import { sanitizeHtml } from "components/Utils/htmlSecurity";
 // import { enquireScreen } from 'enquire-js';
 
 const { Item } = Menu;
@@ -138,7 +139,7 @@ const TinTuc = ({}) => {
                     textAlign: "justify",
                     fontSize: "calc(0.8em + 0.4vw)",
                   }}
-                  dangerouslySetInnerHTML={{ __html: content }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
                 />
               </div>
             </Col>

@@ -7,6 +7,7 @@ import { ip3 } from "data/ip";
 import { enquireScreen } from "enquire-js";
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
+import { sanitizeHtml } from "components/Utils/htmlSecurity";
 
 export const TitleUnderWrapper = styled.div`
   background-color: #d50000;
@@ -80,7 +81,7 @@ const ChucNangNhiemVu = () => {
             </Row>
             <div style={{ fontFamily: "'Montserrat', sans-serif" }}>
               {relate.map((item) => (
-                <div dangerouslySetInnerHTML={{ __html: item.noiDung }} />
+                <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.noiDung) }} />
               ))}
             </div>
           </div>

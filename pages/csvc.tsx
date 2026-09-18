@@ -6,6 +6,7 @@ import { ip3 } from "data/ip";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import Box from "components/Box";
+import { sanitizeHtml } from "components/Utils/htmlSecurity";
 
 const CoSoVatChatHocVien = ({}) => {
   const [relate, setRelate] = useState([]);
@@ -53,9 +54,7 @@ const CoSoVatChatHocVien = ({}) => {
                         {_.get(item, "moTa", "")}
                       </p>
                       <div
-                        dangerouslySetInnerHTML={{
-                          __html: _.get(item, "noiDung", ""),
-                        }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(_.get(item, "noiDung", "")) }}
                       />
                     </div>
                   </div>

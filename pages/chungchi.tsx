@@ -5,7 +5,7 @@ import Box from "components/Box";
 import Heading from "components/Heading";
 import FormTraCuu from "components/Table/FormTraCuuTOEIC";
 import Container from "components/UI/Container";
-import { ipPTIT } from "data/ip";
+import { ipVIN } from "data/ip";
 import PropTypes from "prop-types";
 import "rc-tabs/assets/index.css";
 import React, { useState } from "react";
@@ -64,7 +64,7 @@ const VBChungChi = (props) => {
       return;
     }
     setloading(true);
-    const data = await axios.post(`${ipPTIT}dich-vu-slink/dang-ky-thi-chung-chi-ngoai-ngu/public/tra-cuu`, {
+    const data = await axios.post(`${ipVIN}dich-vu-slink/dang-ky-thi-chung-chi-ngoai-ngu/public/tra-cuu`, {
       hoDem,
       ten,
       cmtCccd,

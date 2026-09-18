@@ -13,6 +13,7 @@ import { ip } from "data/ip";
 import _ from "lodash";
 import bgNganhHOc from "assets/image/DeAnTSPTIT2021.jpg";
 import { NextSeo } from "next-seo";
+import { sanitizeHtml } from "components/Utils/htmlSecurity";
 
 // moment().locale('vi');
 
@@ -160,9 +161,7 @@ const TinTuc = ({ dataDeAn, dataMucLuc }) => {
                           {item?.heading}
                         </b>
                         <br />
-                        <div
-                          dangerouslySetInnerHTML={{ __html: item?.content }}
-                        />
+                        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(item?.content) }} />
                       </div>
                     </>
                   ))}

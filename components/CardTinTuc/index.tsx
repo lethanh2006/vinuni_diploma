@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import { useMediaQuery } from "react-responsive";
 import { CardTinTuc, CenterCol, ContentLargeCard } from "./TinTuc.style";
+import { sanitizeInternalPathSegment } from "components/Utils/htmlSecurity";
 
 const renderParagraph = (text, rows, style) => (
   <Typography.Paragraph ellipsis={{ rows, expandable: false }} style={style}>
@@ -14,6 +15,10 @@ const renderParagraph = (text, rows, style) => (
 const TinTuc = (props) => {
   const { data } = props;
   const isMobile = useMediaQuery({ maxWidth: 767 });
+  const toTinTucPath = (rawSlug) => {
+    const safeSlug = sanitizeInternalPathSegment(rawSlug);
+    return safeSlug ? `/tintuc/${safeSlug}` : "/tintucchung";
+  };
 
   if (data.length === 0)
     return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="trống" />;
@@ -32,7 +37,7 @@ const TinTuc = (props) => {
           {!isMobile && (
             <>
               <Col xs={24} md={12}>
-                <Link href="/tintuc/[pid]" as={`/tintuc/${data?.[0]?.slug}`}>
+                <Link href="/tintuc/[pid]" as={toTinTucPath(data?.[0]?.slug)}>
                   <CardTinTuc first={true}>
                     <div
                       style={{
@@ -65,7 +70,7 @@ const TinTuc = (props) => {
                   {data
                     .filter((tmp, i) => i > 0 && i <= 3)
                     .map((tintuc, index) => (
-                      <Link href="/tintuc/[pid]" as={`/tintuc/${tintuc?.slug}`}>
+                      <Link href="/tintuc/[pid]" as={toTinTucPath(tintuc?.slug)}>
                         <CardTinTuc style={{ height: "33.33%" }}>
                           <Row gutter={12} style={{ height: "100%" }}>
                             <Col xs={8} style={{ height: "100%" }}>
@@ -107,7 +112,7 @@ const TinTuc = (props) => {
                 .filter((tmp, i) => i > 3)
                 .map((tintuc, index) => (
                   <Col xs={24} md={8}>
-                    <Link href="/tintuc/[pid]" as={`/tintuc/${tintuc?.slug}`}>
+                    <Link href="/tintuc/[pid]" as={toTinTucPath(tintuc?.slug)}>
                       <CardTinTuc>
                         <Row gutter={12}>
                           <Col xs={8}>
@@ -145,7 +150,7 @@ const TinTuc = (props) => {
               <Col xs={24}>
                 {data.map((tintuc, index) => {
                   return (
-                    <Link href="/tintuc/[pid]" as={`/tintuc/${tintuc?.slug}`}>
+                    <Link href="/tintuc/[pid]" as={toTinTucPath(tintuc?.slug)}>
                       <CardTinTuc>
                         <Row
                           style={{ height: "100%" }}

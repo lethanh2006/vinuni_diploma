@@ -14,7 +14,6 @@ const FormTraCuuVBCC = (props) => {
 
 	const handleFinish = (values) => {
 		values.ngaySinh = values.ngaySinh ? moment(values?.ngaySinh).format("DD/MM/YYYY") : undefined;
-		values.mucDichTraCuuId = "69450705c63d2c9bb1ed80a7";
 
 		props.onSubmit(values);
 		form.resetFields();

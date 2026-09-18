@@ -3,6 +3,7 @@
 /* eslint-disable import/prefer-default-export */
 import React from 'react';
 import Container from 'components/UI/Container';
+import { sanitizeHtml } from "components/Utils/htmlSecurity";
 import {
   GoTo, TitleHTML,
   WrapperCard
@@ -16,7 +17,7 @@ export function TongQuan({ tongQuan }) {
       <GoTo id="tongquan" style={{ padding: '10px' }}/>
       <WrapperCard order="first">
         <TitleHTML>Tổng quan</TitleHTML>
-        <div dangerouslySetInnerHTML={{ __html: tongQuan }} />
+        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(tongQuan) }} />
       </WrapperCard>
     </Container>
   );
@@ -29,7 +30,7 @@ export function ChuanDauRa({ chuanDauRa }) {
       <Container>
         <TitleHTML>Chuẩn đầu ra </TitleHTML>
         <div style={{ width: '100%', textAlign: 'justify' }}>
-          <div dangerouslySetInnerHTML={{ __html: chuanDauRa }} />
+          <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(chuanDauRa) }} />
         </div>
       </Container>
     </WrapperCard>
@@ -43,7 +44,7 @@ export function TrienVongNgheNghiep({ ngheNghiep }) {
 
       <Container>
         <TitleHTML>Triển vọng nghề nghiệp </TitleHTML>
-        <div dangerouslySetInnerHTML={{ __html: ngheNghiep }} />
+        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(ngheNghiep) }} />
       </Container>
     </WrapperCard>
   );
@@ -55,7 +56,7 @@ export function HocPhi({ hocPhi }) {
       <GoTo id="hocphi" />
       <Container>
         <TitleHTML>Học phí</TitleHTML>
-        <div dangerouslySetInnerHTML={{ __html: hocPhi }} />
+        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(hocPhi) }} />
       </Container>
     </WrapperCard>
   );
@@ -68,7 +69,7 @@ export function DieuienTuyenSinh({ dieuKienTuyenSinh }) {
 
       <Container>
         <TitleHTML>Điều kiện tuyển sinh</TitleHTML>
-        <div dangerouslySetInnerHTML={{ __html: dieuKienTuyenSinh }} />
+        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(dieuKienTuyenSinh) }} />
       </Container>
     </WrapperCard>
   );

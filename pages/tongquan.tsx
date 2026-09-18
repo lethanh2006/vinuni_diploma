@@ -13,6 +13,7 @@ import React, { useState } from 'react';
 import Sticky from 'react-stickynode';
 import Box from 'components/Box';
 import { SideBar } from '../styles/faq.style';
+import { sanitizeHtml } from "components/Utils/htmlSecurity";
 
 const { Panel } = Collapse;
 
@@ -141,7 +142,7 @@ const TongQuanHocVien = () => {
                                                     <AccordionBody className="accordion_body">
                                                         <div
                                                             style={{ marginTop: 20, textAlign: 'justify', fontSize: 'calc(0.8em + 0.3vw)' }}
-                                                            dangerouslySetInnerHTML={{ __html: accordionItem.ans }}
+                                                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(accordionItem.ans) }}
                                                         />
                                                         {content}
                                                     </AccordionBody>

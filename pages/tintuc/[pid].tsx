@@ -20,6 +20,7 @@ import Sticky from "react-stickynode";
 import Box from "components/Box";
 import { NextSeo } from "next-seo";
 import { TitleLinkWrapper } from "../../styles/baiviet.style";
+import { sanitizeExternalHttpUrl, sanitizeHtml, sanitizeInternalPathSegment } from "components/Utils/htmlSecurity";
 
 // moment().locale('vi');
 
@@ -31,7 +32,7 @@ const TinTuc = ({ data, relate }) => {
   const ngayDang = _.get(data, "ngayDang", "");
   const tieuDe = _.get(data, "tieuDe", "");
   const moTa = _.get(data, "moTa", "");
-  const noiDung = _.get(data, "noiDung", "");
+  const noiDung = sanitizeHtml(_.get(data, "noiDung", ""));
   const nguoiDang = _.get(data, "nguoiDang.hoTen", "");
   const anhDaiDien = _.get(data, "anhDaiDien", "");
   const slug = _.get(data, "slug", "");
@@ -56,6 +57,10 @@ const TinTuc = ({ data, relate }) => {
     let tmp = str.split("/");
     let tmp1 = tmp[tmp.length - 1].split("-");
     return tmp1[tmp1.length - 1];
+  };
+  const toTinTucHref = (rawSlug) => {
+    const safeSlug = sanitizeInternalPathSegment(rawSlug);
+    return safeSlug ? `/tintuc/${safeSlug}` : "#";
   };
 
   return (
@@ -151,12 +156,19 @@ const TinTuc = ({ data, relate }) => {
                 {url.length !== 0 ? (
                   <>
                     <p>Tài liệu đính kèm:</p>
-                    {url.map((item, index) => (
-                      <>
-                        {index + 1}. <a href={item}>{trimURl(item)}</a>
-                        <br />
-                      </>
-                    ))}
+                    {url.map((item, index) => {
+                      const safeUrl = sanitizeExternalHttpUrl(item);
+                      if (!safeUrl) return null;
+                      return (
+                        <React.Fragment key={`${safeUrl}-${index}`}>
+                          {index + 1}.{" "}
+                          <a href={safeUrl} target="_blank" rel="noreferrer">
+                            {trimURl(safeUrl)}
+                          </a>
+                          <br />
+                        </React.Fragment>
+                      );
+                    })}
                   </>
                 ) : null}
               </div>
@@ -191,7 +203,7 @@ const TinTuc = ({ data, relate }) => {
                           }
                           title={
                             <TitleLinkWrapper
-                              href={`/tintuc/${_.get(item, "slug", "")}`}
+                              href={toTinTucHref(_.get(item, "slug", ""))}
                               style={{ textAlign: "justify" }}
                             >
                               {renderTitle(_.get(item, "tieuDe", ""))}

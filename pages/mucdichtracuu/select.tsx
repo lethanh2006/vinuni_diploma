@@ -2,7 +2,7 @@
 import { Select } from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { ipPTIT } from "data/ip";
+import { ipVIN } from "data/ip";
 
 const { Option } = Select;
 
@@ -15,7 +15,7 @@ const SelectMucDichTraCuuPublic = (props) => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `${ipPTIT}qldt-test/muc-dich-tra-cuu-phu-luc/public/many`,
+          `${ipVIN}qldt-test/muc-dich-tra-cuu-phu-luc/public/many`,
         );
         const data = res.data?.data || [];
         setDanhSach(data);

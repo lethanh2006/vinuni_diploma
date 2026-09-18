@@ -121,7 +121,13 @@ export function toHexa(str) {
 function render(value) {
     // phục vụ hàm toRegex bên dưới
     let result = '';
-    [...value].forEach(char => (result += map[char] || char));
+    [...value].forEach(char => {
+        if (map[char]) {
+            result += map[char];
+            return;
+        }
+        result += char.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    });
     return result;
 }
 
@@ -133,7 +139,8 @@ function render(value) {
 
 export function toRegex(value) {
     // convert từ string sang dạng regex.
-    return { $regex: `.*${render(Format(value))}.*`, $options: 'i' };
+    const normalized = Format(value).slice(0, 128);
+    return { $regex: `.*${render(normalized)}.*`, $options: 'i' };
 }
 
 export function tinhTuanHienTai(ngayHoc) {
@@ -157,7 +164,7 @@ export function tinhNgayTheoTuan(tuan, thu, ngayBatDau) {
 export function Object2Regex(obj) {
     // convert từ string sang dạng regex.
     return Object.keys(obj).map(key => ({
-        [key]: { $regex: `.*${render(Format(obj[key]))}.*`, $options: 'i' },
+        [key]: { $regex: `.*${render(Format(obj[key]).slice(0, 128))}.*`, $options: 'i' },
     }));
 }
 
