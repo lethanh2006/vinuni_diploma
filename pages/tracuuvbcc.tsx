@@ -4,7 +4,7 @@ import axios from "axios";
 import FormTraCuu from "components/Table/FormTraCuuVBCC";
 import TableTraCuuVBCC from "components/Table/TableTraCuuVBCC";
 import Container from "components/UI/Container";
-import { ipVIN } from "data/ip";
+import { ipVbcc } from "data/ip";
 import PropTypes from "prop-types";
 import "rc-tabs/assets/index.css";
 import React, { useState } from "react";
@@ -35,7 +35,7 @@ const TraCuuVanBangChungChi = (props) => {
 		setloading(true);
 		setSelectedRecord(null);
 		try {
-			const data = await axios.post(`${ipVIN}phu-luc-van-bang/public/tra-cuu-phu-luc-van-bang`, values, {
+			const data = await axios.post(`${ipVbcc}/phu-luc-van-bang/public/tra-cuu-phu-luc-van-bang`, values, {
 				headers: {
 					"ngrok-skip-browser-warning": "true",
 				},

@@ -4,6 +4,16 @@
 
 ## Getting started
 
+### Environment variables
+
+Copy `.env.example` to `.env.local` and update the API URLs when needed:
+
+```bash
+cp .env.example .env.local
+```
+
+`NEXT_PUBLIC_API_URL` is the shared base URL for the education/news API. The old `ip`, `ip2`, and `ip3` values have been consolidated into this variable. `NEXT_PUBLIC_VBCC_API_URL` configures the diploma/certificate API exposed as `ipVbcc`.
+
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
 Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!

@@ -3,7 +3,7 @@ import { Row, Spin } from "antd";
 import axios from "axios";
 import Box from "components/Box";
 import Container from "components/UI/Container";
-import { ip3 } from "data/ip";
+import { ip } from "data/ip";
 import { enquireScreen } from "enquire-js";
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
@@ -29,7 +29,7 @@ const ChucNangNhiemVu = () => {
   useEffect(() => {
     (async function wrapFunc() {
       setLoading(true);
-      const response = await axios.get(`${ip3}/bai-viet`, {
+      const response = await axios.get(`${ip}/bai-viet`, {
         params: {
           page: 1,
           limit: 1,
