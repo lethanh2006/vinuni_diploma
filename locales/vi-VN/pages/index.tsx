@@ -15,7 +15,7 @@ module.exports = {
     enter_diploma_no: "Nhập số hiệu văn bằng",
     book_no: "Số vào sổ",
     example_book_no: "Ví dụ: TS25/{soVaoSo}",
-    search_button: "TRA CỨU THÔNG TIN",
+    search_button: "Tra cứu thông tin",
   },
   table: {
     book_no: "Số vào sổ",

@@ -117,7 +117,7 @@ const LangSwitcher = styled.div`
   flex-direction: row;
   align-items: center;
   background: #ffffff;
-  border-radius: 4px;
+  border-radius: 22px;
   overflow: hidden;
   height: 24px;
   flex-shrink: 0;
@@ -484,14 +484,14 @@ const Navbar = ({ navbarStyle, logoStyle, button, row, menuWrapper }) => {
       <LangBtn
         className={isEN ? "active" : "inactive"}
         onClick={() => changeLocale("en-US")}
-        style={{ borderRadius: "4px" }}
+        style={{ borderRadius: "22px" }}
       >
         EN
       </LangBtn>
       <LangBtn
         className={!isEN ? "active" : "inactive"}
         onClick={() => changeLocale("vi-VN")}
-        style={{ borderRadius: "4px" }}
+        style={{ borderRadius: "22px" }}
       >
         VI
       </LangBtn>

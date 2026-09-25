@@ -4,11 +4,17 @@ import {
   Card,
   CardContent,
   DatePicker,
+  IconRotateArrow,
   Input,
   Label,
 } from "@vinuni/ui";
 import React, { useState } from "react";
 import { useTranslation } from "components/Utils/useTranslation";
+
+const fieldStyle = {
+  color: "#ffffff",
+  borderColor: "#FFFFFF33",
+};
 
 const emptyValues = {
   hoTen: "",
@@ -72,7 +78,7 @@ const FormTraCuuVBCC = (props) => {
                 value={values.hoTen}
                 onChange={setField("hoTen")}
                 placeholder={t("index.form.enter_fullname")}
-                style={{ color: "#ffffff" }}
+                style={fieldStyle}
               />
             </Field>
             <Field label={t("index.form.dob")}>
@@ -83,7 +89,7 @@ const FormTraCuuVBCC = (props) => {
                   setValues((current) => ({ ...current, ngaySinh }))
                 }
                 aria-label={t("index.form.dob")}
-                style={{ color: "#ffffff" }}
+                style={fieldStyle}
               />
             </Field>
             <Field label={t("index.form.cccd")}>
@@ -91,7 +97,7 @@ const FormTraCuuVBCC = (props) => {
                 value={values.cccd}
                 onChange={setField("cccd")}
                 placeholder={t("index.form.enter_cccd")}
-                style={{ color: "#ffffff" }}
+                style={fieldStyle}
               />
             </Field>
             <Field label={t("index.form.student_id")}>
@@ -99,7 +105,7 @@ const FormTraCuuVBCC = (props) => {
                 value={values.maSinhVien}
                 onChange={setField("maSinhVien")}
                 placeholder={t("index.form.enter_student_id")}
-                style={{ color: "#ffffff" }}
+                style={fieldStyle}
               />
             </Field>
             <Field label={t("index.form.diploma_no")}>
@@ -107,7 +113,7 @@ const FormTraCuuVBCC = (props) => {
                 value={values.soHieuVanBang}
                 onChange={setField("soHieuVanBang")}
                 placeholder={t("index.form.enter_diploma_no")}
-                style={{ color: "#ffffff" }}
+                style={fieldStyle}
               />
             </Field>
             <Field label={t("index.form.book_no")}>
@@ -115,7 +121,7 @@ const FormTraCuuVBCC = (props) => {
                 value={values.soVaoSoBang}
                 onChange={setField("soVaoSoBang")}
                 placeholder={t("index.form.example_book_no")}
-                style={{ color: "#ffffff" }}
+                style={fieldStyle}
               />
             </Field>
           </div>
@@ -129,21 +135,7 @@ const FormTraCuuVBCC = (props) => {
               onClick={handleReset}
               style={{ backgroundColor: "#ffffff" }}
             >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12.4 19.8215C8.20264 19.8215 4.8 16.4093 4.8 12.2C4.8 8.87077 6.92859 6.04011 9.89541 5.00202M12.4 19.8215L10.7905 18.2075M12.4 19.8215L10.826 21.4M12.4 4.57847C16.5974 4.57847 20 7.99074 20 12.2C20 15.5292 17.8714 18.3599 14.9046 19.398M12.4 4.57847L13.974 3M12.4 4.57847L14.0095 6.19254"
-                  stroke="#051A53"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <IconRotateArrow size={24} color="#134D8B" />
             </Button>
             <Button type="submit" style={{ color: "#ffffff" }}>
               {t("index.form.search_button")}
@@ -171,6 +163,26 @@ const FormTraCuuVBCC = (props) => {
           font-size: 14px;
           line-height: 170%;
           letter-spacing: 0.015em;
+        }
+        :global(.vbcc-form [data-slot="input"]),
+        :global(.vbcc-form [data-slot="date-picker-field"]) {
+          color: #ffffff;
+          border-color: #ffffff33 !important;
+        }
+        :global(.vbcc-form [data-slot="input"]::placeholder) {
+          color: #ffffff33;
+          opacity: 1;
+        }
+        :global(
+          .vbcc-form [data-slot="date-picker-field"] [role="spinbutton"]
+        ) {
+          color: #ffffff;
+        }
+        :global(.vbcc-form [data-slot="date-picker-field"] [data-placeholder]),
+        :global(
+          .vbcc-form [data-slot="date-picker-field"] [data-type="literal"]
+        ) {
+          color: #ffffff33;
         }
         @media (min-width: 768px) {
           .vbcc-form-grid {
