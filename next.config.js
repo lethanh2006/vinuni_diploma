@@ -10,7 +10,17 @@ module.exports = {
   distDir: "./.next",
   trailingSlash: true,
   reactStrictMode: false,
-  transpilePackages: ["antd", "@ant-design/icons", "rc-util", "rc-pagination", "rc-picker"],
+  transpilePackages: [
+    "antd",
+    "@ant-design/icons",
+    "rc-util",
+    "rc-pagination",
+    "rc-picker",
+    "@vinuni/ui",
+    "@shadcn/react",
+    "radix-ui",
+    "sonner",
+  ],
   compiler: {
     styledComponents: true,
   },

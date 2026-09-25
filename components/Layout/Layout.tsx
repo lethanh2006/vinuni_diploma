@@ -3,8 +3,7 @@
 // import { DrawerProvider } from 'common/src/contexts/DrawerContext';
 // import Navbar from 'common/src/containers/Hosting/Navbar';
 // import Footer from 'common/src/components/Footer/index';
-import { ArrowUpOutlined } from "@ant-design/icons";
-import { Affix, Button } from "antd";
+import { Button, IconArrowUp } from "@vinuni/ui";
 import { ResetCSS } from "assets/css/style";
 import Navbar from "components/Navbar";
 // import Navbar from '../../../common/src/containers/Hosting/Navbar'
@@ -20,7 +19,6 @@ import { ContentWrapper, GlobalStyle } from "./hosting.style";
 export const siteTitle = "VinUni Cổng tra cứu văn bằng";
 const siteDescription = "Cổng tra cứu và xác thực thông tin văn bằng VinUni";
 
-
 export default function Layout({ children, home }) {
   const scrollToTop = () => {
     if (window) {
@@ -34,8 +32,16 @@ export default function Layout({ children, home }) {
   return (
     <div>
       <Head>
-        <link rel="icon" type="image/png" href="/assets/image/logo_vinuni.png" />
-        <link rel="shortcut icon" type="image/png" href="/assets/image/logo_vinuni.png" />
+        <link
+          rel="icon"
+          type="image/png"
+          href="/assets/image/logo_vinuni.png"
+        />
+        <link
+          rel="shortcut icon"
+          type="image/png"
+          href="/assets/image/logo_vinuni.png"
+        />
         <link rel="apple-touch-icon" href="/assets/image/logo.png" />
         <link rel="prefetch" href="/assets/image/metadata.png" />
         <title>{siteTitle}</title>
@@ -59,21 +65,22 @@ export default function Layout({ children, home }) {
 
             {children}
             <Footer />
-            <Affix offsetBottom={200} innerZ={99999}>
+            <div
+              style={{
+                position: "fixed",
+                right: 20,
+                bottom: 24,
+                zIndex: 99999,
+              }}
+            >
               <Button
-                type="primary"
-                style={{
-                  float: "right",
-                  margin: 20,
-                  backgroundColor: "#134D8B",
-                  borderColor: "#134D8B",
-                  borderRadius: "40%",
-                }}
+                size="icon"
                 onClick={scrollToTop}
+                style={{ color: "#ffffff" }}
               >
-                <ArrowUpOutlined />
+                <IconArrowUp />
               </Button>
-            </Affix>
+            </div>
           </ContentWrapper>
         </ParallaxProvider>
       </ThemeProvider>
