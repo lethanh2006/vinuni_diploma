@@ -1,14 +1,5 @@
 // @ts-nocheck
-import {
-  LecxeEmptyNoData,
-  Separator,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@vinuni/ui";
+import { LecxeEmptyNoData } from "@vinuni/ui";
 import moment from "moment";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -80,6 +71,33 @@ const ChiTietVanBang = ({ record: item = {}, onBack }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const record = item?.DuLieu ? { ...item, ...item.DuLieu } : item;
+  const documentUrl = record?.fileVanBang || record?.urlIpfs;
+  const dataElements = record?.templateData ?? [];
+  const findDataElement = (...headerNames) => {
+    const normalizedHeaders = headerNames.map(normalizeLocalizedText);
+
+    return dataElements.find((element) =>
+      normalizedHeaders.includes(normalizeLocalizedText(element?.headerName)),
+    );
+  };
+  const getDataElementValue = (headerNames, fallback = "--") => {
+    const element = findDataElement(...headerNames);
+    return element ? renderField(element, t) : fallback;
+  };
+  const specialization =
+    record?.chuyenNganh ??
+    getDataElementValue([
+      "Chuyên ngành",
+      "Chuyên ngành đào tạo",
+      "Specialization",
+    ]);
+  const minorSpecialization =
+    record?.chuyenNganhPhu ??
+    getDataElementValue([
+      "Chuyên ngành phụ",
+      "Minor specialization",
+      "Minor",
+    ]);
 
   useEffect(() => {
     if (!onBack) {
@@ -192,205 +210,183 @@ const ChiTietVanBang = ({ record: item = {}, onBack }) => {
 
         {record?._id ? (
           <div className="vbcc-detail-content">
-            <div>
-              <div className="vbcc-info-card">
-                <div className="vbcc-info-title">
-                  {t("detail.diploma_info")}
-                </div>
-                <InfoGrid
-                  items={[
-                    [t("detail.fullname"), record?.hoTen ?? "--"],
-                    [t("detail.student_id"), record?.maSinhVien ?? "--"],
-                    [
-                      t("detail.dob"),
-                      record?.ngaySinh
-                        ? moment(record.ngaySinh).format("DD/MM/YYYY")
-                        : "--",
-                    ],
-                    [
-                      t("detail.education_level"),
-                      translateDynamicValue(
-                        record?.thongTinTrinhDoDaoTao?.ten ??
-                          record?.trinhDoDaoTao,
-                        t,
-                      ) ?? "--",
-                    ],
-                    [
-                      t("detail.education_form"),
-                      translateDynamicValue(
-                        record?.thongTinHinhThucDaoTao?.ten ??
-                          record?.hinhThucDaoTao,
-                        t,
-                      ) ?? "--",
-                    ],
-                    [
-                      t("detail.major"),
-                      translateDynamicValue(
-                        record?.thongTinNganhDaoTao?.ten ?? record?.nganhDaoTao,
-                        t,
-                      ) ?? "--",
-                    ],
-                    [t("detail.book_no"), record?.soVaoSoBang ?? "--"],
-                    [t("detail.diploma_no"), record?.soHieuVanBang ?? "--"],
-                    [
-                      t("detail.book_no_en"),
-                      record?.bookEntryNumberFormat ?? "---",
-                    ],
-                  ]}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="vbcc-info-card">
-                <div className="vbcc-info-title">
-                  {t("detail.decision_info")}
-                </div>
-                <InfoGrid
-                  wideLast
-                  items={[
-                    [
-                      t("detail.decision_no"),
-                      record?.quyetDinh?.soQuyetDinh ?? "--",
-                    ],
-                    [
-                      t("detail.issue_date"),
-                      record?.quyetDinh?.ngayBanHanh
-                        ? moment(record.quyetDinh.ngayBanHanh).format(
-                            "DD/MM/YYYY",
-                          )
-                        : "--",
-                    ],
-                    [t("detail.summary"), record?.quyetDinh?.noiDung ?? "--"],
-                  ]}
-                />
-              </div>
-            </div>
-
-            {(() => {
-              const templateElements =
-                record?.quyetDinh?.bieuMau?.elements ?? [];
-              const dataElements = record?.templateData ?? [];
-
-              const elements = templateElements.length
-                ? templateElements.map((e) => ({
-                    ...e,
-                    value: dataElements.find(
-                      (d) => d.headerName === e.headerName,
-                    )?.value,
-                  }))
-                : dataElements;
-
-              const valuedElements = elements
-                ?.filter((item) => item.type !== "Table")
-                ?.filter((item) => !!item.value);
-
-              return (
-                <>
-                  {!!valuedElements.length && (
-                    <div>
-                      <div className="vbcc-info-card">
-                        <div className="vbcc-info-title">
-                          {t("detail.appendix_info")}
-                        </div>
-                        <InfoGrid
-                          items={valuedElements.map((item) => [
-                            translateDynamicHeader(item.headerName, t),
-                            renderField(item, t),
-                          ])}
-                        />
-                      </div>
-                    </div>
+            <div className="vbcc-detail-main-grid">
+              <div className="vbcc-document-card">
+                <div className="vbcc-document-preview">
+                  {documentUrl ? (
+                    <PDFViewerV2
+                      url={documentUrl}
+                      height="100%"
+                      plugins={[]}
+                    />
+                  ) : (
+                    <img
+                      className="vbcc-document-demo"
+                      src="/assets/image/vanbangdemo.png"
+                      alt={t("detail.diploma_copy")}
+                    />
                   )}
-
-                  {elements
-                    ?.filter((item) => item.type === "Table")
-                    ?.map((item, index) => {
-                      const columns =
-                        item?.cot?.map((i) => ({
-                          title: translateDynamicHeader(i.headerName, t),
-                          dataIndex: i.headerName,
-                          key: i.headerName,
-                          width: i.type === "Text" ? 150 : 120,
-                          render: (val) =>
-                            i.type === "Text" ? <span>{val}</span> : val,
-                        })) ?? [];
-
-                      if (Array.isArray(item.value) && item.value.length > 0) {
-                        return (
-                          <div key={index}>
-                            <div className="vbcc-info-card">
-                              <div className="vbcc-info-title">
-                                {item.headerName}
-                              </div>
-                              <div className="vbcc-data-table">
-                                <Table density="compact">
-                                  <TableHeader>
-                                    <TableRow>
-                                      {columns.map((column) => (
-                                        <TableHead key={column.key}>
-                                          {column.title}
-                                        </TableHead>
-                                      ))}
-                                    </TableRow>
-                                  </TableHeader>
-                                  <TableBody>
-                                    {item.value.map((row, rowIndex) => (
-                                      <TableRow key={rowIndex}>
-                                        {columns.map((column) => (
-                                          <TableCell key={column.key}>
-                                            {column.render(
-                                              row?.[column.dataIndex],
-                                            )}
-                                          </TableCell>
-                                        ))}
-                                      </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })}
-                </>
-              );
-            })()}
-
-            {!!record?.fileVanBang && (
-              <div>
-                <SectionTitle>{t("detail.diploma_file")}</SectionTitle>
-                <PDFViewerV2 url={record.fileVanBang} height={"650px"} />
-              </div>
-            )}
-
-            {record?.urlIpfs && (
-              <div>
-                <SectionTitle>{t("detail.ipfs_file")}</SectionTitle>
-                <PDFViewerV2 url={record.urlIpfs} height={"650px"} />
-              </div>
-            )}
-
-            {record?.signature && (
-              <div>
-                <div className="vbcc-signature">
-                  <img src="/images/tick.svg" alt="" width={24} height={24} />
-                  <span style={{ fontWeight: 600 }}>
-                    {t("detail.signed_info")}
-                  </span>
+                </div>
+                <div className="vbcc-document-actions">
                   <a
-                    href={`https://jwt.io/#debugger-io?token=${record.signature}`}
+                    className={`vbcc-document-action ${
+                      documentUrl ? "" : "is-disabled"
+                    }`}
+                    href={documentUrl || undefined}
                     target="_blank"
-                    className="text-primary"
                     rel="noreferrer"
+                    aria-label={t("detail.diploma_file")}
+                    aria-disabled={!documentUrl}
                   >
-                    {t("detail.check_signature")}
+                    <img
+                      className="vbcc-pdf-icon"
+                      src="/assets/image/iconpdf.png"
+                      alt=""
+                    />
                   </a>
+                  <button
+                    className="vbcc-document-action"
+                    type="button"
+                    onClick={() => window.print()}
+                    aria-label={t("detail.print")}
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M15 1.25C16.5188 1.25 17.75 2.48122 17.75 4V6.25H19.5C21.2949 6.25 22.75 7.70507 22.75 9.5L22.75 16C22.75 16.9665 21.9665 17.75 21 17.75H17.75V20C17.75 20.9665 16.9665 21.75 16 21.75L8 21.75C7.0335 21.75 6.25 20.9665 6.25 20V17.75H3C2.0335 17.75 1.25 16.9665 1.25 16L1.25 9.5C1.25 7.70507 2.70507 6.25 4.5 6.25H6.25L6.25 4C6.25 2.48122 7.48122 1.25 9 1.25L15 1.25ZM8 15.75C7.86193 15.75 7.75 15.8619 7.75 16V20C7.75 20.1381 7.86193 20.25 8 20.25L16 20.25C16.1381 20.25 16.25 20.1381 16.25 20L16.25 16C16.25 15.8619 16.1381 15.75 16 15.75H8ZM4.5 7.75C3.5335 7.75 2.75 8.5335 2.75 9.5L2.75 16C2.75 16.1381 2.86193 16.25 3 16.25H6.25V16C6.25 15.0335 7.0335 14.25 8 14.25H16C16.9665 14.25 17.75 15.0335 17.75 16V16.25L21 16.25C21.1381 16.25 21.25 16.1381 21.25 16L21.25 9.5C21.25 8.5335 20.4665 7.75 19.5 7.75L4.5 7.75ZM19.0088 10C19.5611 10 20.0088 10.4477 20.0088 11C20.0088 11.5523 19.5611 12 19.0088 12H19C18.4477 12 18 11.5523 18 11C18 10.4477 18.4477 10 19 10H19.0088ZM9 2.75C8.30964 2.75 7.75 3.30964 7.75 4L7.75 6.25L16.25 6.25V4C16.25 3.30964 15.6904 2.75 15 2.75L9 2.75Z"
+                        fill="black"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
-            )}
+
+              <div className="vbcc-info-stack">
+                <div className="vbcc-info-card">
+                  <div className="vbcc-info-title">
+                    {t("detail.diploma_info")}
+                  </div>
+                  <InfoGrid
+                    items={[
+                      [t("detail.fullname"), record?.hoTen ?? "--"],
+                      [t("detail.student_id"), record?.maSinhVien ?? "--"],
+                      [
+                        t("detail.dob"),
+                        record?.ngaySinh
+                          ? moment(record.ngaySinh).format("DD/MM/YYYY")
+                          : "--",
+                      ],
+                      [
+                        t("detail.education_level"),
+                        translateDynamicValue(
+                          record?.thongTinTrinhDoDaoTao?.ten ??
+                            record?.trinhDoDaoTao,
+                          t,
+                        ) ?? "--",
+                      ],
+                      [
+                        t("detail.education_form"),
+                        translateDynamicValue(
+                          record?.thongTinHinhThucDaoTao?.ten ??
+                            record?.hinhThucDaoTao,
+                          t,
+                        ) ?? "--",
+                      ],
+                      [
+                        t("detail.major"),
+                        translateDynamicValue(
+                          record?.thongTinNganhDaoTao?.ten ??
+                            record?.nganhDaoTao,
+                          t,
+                        ) ?? "--",
+                      ],
+                      [t("detail.specialization"), specialization],
+                      [t("detail.minor_specialization"), minorSpecialization],
+                      [t("detail.diploma_no"), record?.soHieuVanBang ?? "--"],
+                      [t("detail.book_no"), record?.soVaoSoBang ?? "--"],
+                      [
+                        t("detail.book_no_en"),
+                        record?.bookEntryNumberFormat ?? "---",
+                      ],
+                    ]}
+                  />
+                </div>
+
+                <div className="vbcc-info-card">
+                  <div className="vbcc-info-title">
+                    {t("detail.decision_info")}
+                  </div>
+                  <InfoGrid
+                    wideLast
+                    items={[
+                      [
+                        t("detail.decision_no"),
+                        record?.quyetDinh?.soQuyetDinh ?? "--",
+                      ],
+                      [
+                        t("detail.issue_date"),
+                        record?.quyetDinh?.ngayBanHanh
+                          ? moment(record.quyetDinh.ngayBanHanh).format(
+                              "DD/MM/YYYY",
+                            )
+                          : "--",
+                      ],
+                      [t("detail.summary"), record?.quyetDinh?.noiDung ?? "--"],
+                    ]}
+                  />
+                </div>
+
+                <div className="vbcc-info-card">
+                  <div className="vbcc-info-title">
+                    {t("detail.appendix_info")}
+                  </div>
+                  <InfoGrid
+                    items={[
+                      [
+                        t("detail.appendix_major"),
+                        getDataElementValue([
+                          "Chuyên ngành đào tạo",
+                          "Major",
+                        ]),
+                      ],
+                      [
+                        t("detail.language_of_instruction"),
+                        getDataElementValue([
+                          "Ngôn ngữ đào tạo",
+                          "Language of Instruction",
+                        ]),
+                      ],
+                      [
+                        t("detail.ethnicity"),
+                        getDataElementValue(["Dân tộc", "Ethnicity"]),
+                      ],
+                      [
+                        t("detail.graduation_decision_no"),
+                        getDataElementValue([
+                          "Số QĐTN",
+                          "Số quyết định tốt nghiệp",
+                          "Graduation decision number",
+                        ]),
+                      ],
+                      [
+                        t("detail.graduation_decision_date"),
+                        getDataElementValue([
+                          "Ngày QĐTN",
+                          "Ngày quyết định tốt nghiệp",
+                          "Graduation decision date",
+                        ]),
+                      ],
+                    ]}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="vbcc-empty">
@@ -419,13 +415,6 @@ const InfoGrid = ({ items, wideLast = false }) => (
       </div>
     ))}
   </dl>
-);
-
-const SectionTitle = ({ children }) => (
-  <div className="vbcc-section-title">
-    <span>{children}</span>
-    <Separator />
-  </div>
 );
 
 export default ChiTietVanBang;

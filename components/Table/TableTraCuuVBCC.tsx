@@ -71,10 +71,10 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
                   alignItems: "center",
                   cursor: rec?.DuLieu?._id ? "pointer" : "not-allowed",
                   opacity: rec?.DuLieu?._id ? 1 : 0.5,
-                  width: "28px",
-                  height: "28px",
+                  width: "36px",
+                  height: "36px",
                   background: "#F4F4F4",
-                  borderRadius: "4px",
+                  borderRadius: "999px",
                   border: "none",
                   transition: "background 0.2s ease",
                 }}
@@ -123,10 +123,10 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
                     alignItems: "center",
                     cursor: rec?.DuLieu?._id ? "pointer" : "not-allowed",
                     opacity: rec?.DuLieu?._id ? 1 : 0.5,
-                    width: "28px",
-                    height: "28px",
+                    width: "36px",
+                    height: "36px",
                     background: "#F4F4F4",
-                    borderRadius: "4px",
+                    borderRadius: "999px",
                     border: "none",
                     transition: "background 0.2s ease",
                   }}
@@ -182,85 +182,110 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
       }))
     : [];
 
+  if (isEmpty && !hasError) {
+    return null;
+  }
+
   return (
     <div
       className="vbcc-result-section"
       style={{
         width: "100%",
         boxSizing: "border-box",
-        padding: isMobile ? "40px 16px" : "40px clamp(24px, 8.333vw, 120px)",
-        backgroundColor: "#EEF2F8",
-        minHeight: isEmpty ? "414px" : "auto",
+        padding: isMobile ? "32px 16px" : "40px clamp(24px, 5vw, 72px)",
+        backgroundColor: "#F7F6FB",
+        minHeight: isEmpty ? "216px" : "auto",
         borderTop: "1px solid #e8e8e8",
         borderBottom: "1px solid #e8e8e8",
       }}
     >
       <div
         className="vbcc-result-container"
-        style={{ width: "100%", maxWidth: "1200px", margin: "0 auto" }}
+        style={{ width: "100%", maxWidth: "1296px", margin: "0 auto" }}
       >
-        <h3
-          className="vbcc-result-heading"
+        <div
+          className="vbcc-result-header"
           style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "space-between",
             padding: "0px",
-            gap: "12px",
             marginTop: 0,
-            marginBottom: isEmpty ? "48px" : "24px",
+            marginBottom: isEmpty ? "32px" : "24px",
           }}
         >
-          <span
+          <h3
+            className="vbcc-result-heading"
             style={{
-              fontFamily: "'Montserrat', sans-serif",
-              fontStyle: "normal",
-              fontWeight: 600,
-              fontSize: isMobile ? "18px" : "24px",
-              lineHeight: "135%",
-              color: "#2E2E2E",
-              whiteSpace: "nowrap",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: "12px",
+              margin: 0,
             }}
           >
-            {t("index.table.search_result_header")}
-          </span>
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ flex: "none", order: 1, flexGrow: 0 }}
-          >
-            <path
-              d="M22.6666 22L28 27.3333"
-              stroke="#134D8B"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <circle
-              cx="14.6667"
-              cy="14.6667"
-              r="10.6667"
-              stroke="#134D8B"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </h3>
+            <span
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontStyle: "normal",
+                fontWeight: 600,
+                fontSize: isMobile ? "18px" : "24px",
+                lineHeight: "135%",
+                color: "#2E2E2E",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {t("index.table.search_result_header")}
+            </span>
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 28 28"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ flex: "none", order: 1, flexGrow: 0 }}
+            >
+              <path
+                d="M22.6666 22L28 27.3333"
+                stroke="#134D8B"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle
+                cx="14.6667"
+                cy="14.6667"
+                r="10.6667"
+                stroke="#134D8B"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </h3>
+          {!isEmpty ? (
+            <span className="vbcc-result-count">
+              {dataSource.length}{" "}
+              {t(dataSource.length === 1 ? "index.table.result" : "index.table.results")}
+            </span>
+          ) : null}
+        </div>
         {isEmpty ? (
           <div
+            className="vbcc-empty-result"
             style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              justifyContent: "center",
               padding: "0px",
               gap: "24px",
+              minHeight: "88px",
             }}
           >
             <div
+              className="vbcc-empty-image"
               style={{
                 flex: "none",
                 order: 0,
@@ -286,7 +311,6 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
               className="vbcc-empty-message"
               style={{
                 flex: "none",
-                order: 1,
                 flexGrow: 0,
                 display: "block",
                 width: "100%",
@@ -310,6 +334,7 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
             </span>
           </div>
         ) : (
+          <>
           <div
             className="vbcc-result-table-card"
             style={{
@@ -329,7 +354,10 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
                     {columns.map((column) => (
                       <TableHead
                         key={column.key}
-                        style={{ width: column.width }}
+                        style={{
+                          width: column.width,
+                          textAlign: column.align,
+                        }}
                       >
                         {column.title}
                       </TableHead>
@@ -340,7 +368,10 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
                   {dataSource.map((record) => (
                     <TableRow key={record.key}>
                       {columns.map((column) => (
-                        <TableCell key={column.key}>
+                        <TableCell
+                          key={column.key}
+                          style={{ textAlign: column.align }}
+                        >
                           {column.render
                             ? column.render(undefined, record)
                             : column.dataIndex.reduce(
@@ -355,20 +386,91 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
               </Table>
             </div>
           </div>
+          <div className="vbcc-result-mobile-list">
+            {dataSource.map((record) => {
+              const data = record?.DuLieu || {};
+              const canView = Boolean(data._id);
+              const fields = [
+                {
+                  label: t("index.table.dob"),
+                  value: data.ngaySinh
+                    ? moment(data.ngaySinh).format("DD/MM/YYYY")
+                    : "—",
+                },
+                { label: t("index.table.student_id"), value: data.maSinhVien },
+                { label: t("index.table.book_no"), value: data.soVaoSoBang },
+                { label: t("index.table.diploma_no"), value: data.soHieuVanBang },
+              ];
+              const content = (
+                <>
+                  <span className="vbcc-result-mobile-name">{data.hoTen || "—"}</span>
+                  <span className="vbcc-result-mobile-divider" aria-hidden="true" />
+                  <span className="vbcc-result-mobile-fields">
+                    {fields.map((field) => (
+                      <span className="vbcc-result-mobile-field" key={field.label}>
+                        <span className="vbcc-result-mobile-label">{field.label}</span>
+                        <span className="vbcc-result-mobile-value">{field.value || "—"}</span>
+                      </span>
+                    ))}
+                  </span>
+                </>
+              );
+              const label = canView
+                ? `${t("index.table.detail")}: ${data.hoTen || data.maSinhVien || data.soHieuVanBang || ""}`
+                : t("index.table.no_info");
+
+              return onViewDetail || !canView ? (
+                <button
+                  className="vbcc-result-mobile-card"
+                  type="button"
+                  key={record.key}
+                  disabled={!canView}
+                  aria-label={label}
+                  onClick={() => onViewDetail?.(record)}
+                >
+                  {content}
+                </button>
+              ) : (
+                <Link
+                  className="vbcc-result-mobile-card"
+                  href={`/vanbangchungchi/${data._id}`}
+                  key={record.key}
+                  aria-label={label}
+                >
+                  {content}
+                </Link>
+              );
+            })}
+          </div>
+          </>
         )}
       </div>
       <style jsx global>{`
-        .custom-table-vbcc .ant-table {
+        .vbcc-result-mobile-list {
+          display: none;
+        }
+        .vbcc-result-count {
+          color: #2e2e2e;
+          font-family: "Inter", sans-serif;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 20px;
+          white-space: nowrap;
+        }
+        .custom-table-vbcc {
+          min-width: 900px;
           border: 1px solid #f4f4f4 !important;
-          border-radius: 6px !important;
-          overflow: hidden !important;
           background: #ffffff !important;
+          border-collapse: separate !important;
+          border-radius: 6px !important;
+          border-spacing: 0 !important;
+          overflow: hidden !important;
         }
-        .custom-table-vbcc .ant-table-container {
+        .vbcc-result-table-card [data-slot="table-container"] {
           border-radius: 6px !important;
         }
-        .custom-table-vbcc .ant-table-thead > tr > th {
-          font-family: "Montserrat", sans-serif !important;
+        .custom-table-vbcc [data-slot="table-head"] {
+          font-family: "Inter", sans-serif !important;
           font-style: normal !important;
           font-weight: 600 !important;
           font-size: 12px !important;
@@ -383,8 +485,8 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
           border-left: 1px solid #ffffff !important;
           white-space: nowrap !important;
         }
-        .custom-table-vbcc .ant-table-thead > tr > th * {
-          font-family: "Montserrat", sans-serif !important;
+        .custom-table-vbcc [data-slot="table-head"] * {
+          font-family: "Inter", sans-serif !important;
           font-style: normal !important;
           font-weight: 600 !important;
           font-size: 12px !important;
@@ -392,11 +494,11 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
           letter-spacing: 0.015em !important;
           color: #2e2e2e !important;
         }
-        .custom-table-vbcc .ant-table-thead > tr > th:first-child {
+        .custom-table-vbcc [data-slot="table-head"]:first-child {
           border-left: none !important;
         }
-        .custom-table-vbcc .ant-table-tbody > tr > td {
-          font-family: "Montserrat", sans-serif !important;
+        .custom-table-vbcc [data-slot="table-cell"] {
+          font-family: "Inter", sans-serif !important;
           font-style: normal !important;
           font-weight: 400 !important;
           font-size: 14px !important;
@@ -411,8 +513,8 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
           border-left: none !important;
           white-space: nowrap !important;
         }
-        .custom-table-vbcc .ant-table-tbody > tr > td * {
-          font-family: "Montserrat", sans-serif !important;
+        .custom-table-vbcc [data-slot="table-cell"] * {
+          font-family: "Inter", sans-serif !important;
           font-style: normal !important;
           font-weight: 400 !important;
           font-size: 14px !important;
@@ -420,13 +522,100 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
           letter-spacing: 0.015em !important;
           color: #2e2e2e !important;
         }
-        .custom-table-vbcc .ant-table-tbody > tr:last-child > td {
+        .custom-table-vbcc
+          [data-slot="table-body"]
+          > [data-slot="table-row"]:last-child
+          > [data-slot="table-cell"] {
           border-bottom: none !important;
         }
-        .custom-table-vbcc .ant-table-tbody > tr:hover > td {
+        .custom-table-vbcc
+          [data-slot="table-body"]
+          > [data-slot="table-row"]:hover
+          > [data-slot="table-cell"] {
           background: #ffffff !important;
         }
         @media (max-width: 767px) {
+          .vbcc-result-section {
+            padding: 40px 20px !important;
+            background-color: #f2f2f8 !important;
+            border-top: none !important;
+            border-bottom: none !important;
+          }
+          .vbcc-result-table-card {
+            display: none;
+          }
+          .vbcc-empty-image,
+          .vbcc-empty-image img {
+            width: 200px !important;
+            height: 192px !important;
+          }
+          .vbcc-result-mobile-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+          }
+          .vbcc-result-mobile-card {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            min-width: 0;
+            padding: 16px;
+            border: 1px solid #ffffff;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.4);
+            color: #000000;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+            text-align: left;
+            text-decoration: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+          }
+          .vbcc-result-mobile-card:focus-visible {
+            outline: 2px solid #2e548a;
+            outline-offset: 3px;
+          }
+          .vbcc-result-mobile-card:disabled {
+            cursor: default;
+          }
+          .vbcc-result-mobile-name {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 28px;
+            overflow-wrap: anywhere;
+          }
+          .vbcc-result-mobile-divider {
+            display: block;
+            width: 100%;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.06);
+          }
+          .vbcc-result-mobile-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+          }
+          .vbcc-result-mobile-field {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2px 4px;
+          }
+          .vbcc-result-mobile-label {
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+          }
+          .vbcc-result-mobile-value {
+            color: #000000;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+            overflow-wrap: anywhere;
+          }
           .vbcc-result-section,
           .vbcc-result-container,
           .vbcc-result-table-card,
@@ -436,32 +625,61 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
             min-width: 0 !important;
             box-sizing: border-box !important;
           }
+          .vbcc-result-header {
+            align-items: flex-start !important;
+            align-items: center !important;
+            gap: 24px;
+          }
           .vbcc-result-heading {
             justify-content: flex-start !important;
-            width: 100% !important;
             text-align: left !important;
+            gap: 12px !important;
           }
-          .custom-table-vbcc .ant-table-body {
+          .vbcc-result-heading > span {
+            font-family: "Inter", sans-serif !important;
+            font-size: 20px !important;
+            line-height: 28px !important;
+            color: #000000 !important;
+          }
+          .vbcc-result-heading > svg {
+            width: 24px;
+            height: 24px;
+          }
+          .vbcc-result-count {
+            font-family: "Inter", sans-serif;
+            font-size: 16px;
+            line-height: 24px;
+            color: #000000;
+          }
+          .vbcc-result-table-card [data-slot="table-container"] {
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             -ms-overflow-style: none;
           }
-          .custom-table-vbcc .ant-table-body::-webkit-scrollbar {
+          .vbcc-result-table-card
+            [data-slot="table-container"]::-webkit-scrollbar {
             display: none;
             width: 0;
             height: 0;
           }
         }
         @media (max-width: 360px) {
-          .custom-table-vbcc .ant-table-thead > tr > th {
+          .vbcc-result-section {
+            padding-right: 16px !important;
+            padding-left: 16px !important;
+          }
+          .vbcc-result-mobile-card {
+            padding: 16px;
+          }
+          .custom-table-vbcc [data-slot="table-head"] {
             padding: 12px 8px !important;
             font-size: 11px !important;
           }
-          .custom-table-vbcc .ant-table-thead > tr > th * {
+          .custom-table-vbcc [data-slot="table-head"] * {
             font-size: 11px !important;
           }
-          .custom-table-vbcc .ant-table-tbody > tr > td {
+          .custom-table-vbcc [data-slot="table-cell"] {
             padding: 12px 8px !important;
             font-size: 13px !important;
           }

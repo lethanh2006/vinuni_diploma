@@ -1,7 +1,8 @@
 // @ts-nocheck
 module.exports = {
   question: "What qualification would you like to verify?",
-  prompt: "Please enter the information to search",
+  // prompt: "Please enter the information to search",
+  prompt: "Please provide at least 2 of the 6 fields to verify qualification.",
   form: {
     fullname: "Full Name",
     enter_fullname: "Enter full name",
@@ -15,7 +16,8 @@ module.exports = {
     enter_diploma_no: "Enter serial number",
     book_no: "Reference Number",
     example_book_no: "Example: TS25/{soVaoSo}",
-    search_button: "Search",
+    // search_button: "Search",
+    search_button: "Search Information",
   },
   table: {
     book_no: "Reference Number",
@@ -28,6 +30,8 @@ module.exports = {
     detail: "Detail",
     no_result_msg: "Diploma information does not exist!",
     search_result_header: "Search Results",
+    result: "Result",
+    results: "Results",
     fill_info_prompt: "Please provide all required information to search",
     empty: "Empty",
   },

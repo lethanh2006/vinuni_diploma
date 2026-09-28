@@ -6,6 +6,7 @@ import { useTranslation } from "components/Utils/useTranslation";
 
 const Turnstile = dynamic(() => import("react-turnstile"), { ssr: false });
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
+const DEFAULT_LOOKUP_PURPOSE_ID = "69450705c63d2c9bb1ed80a7";
 
 const fieldStyle = {
 	color: "#ffffff",
@@ -77,6 +78,7 @@ const FormTraCuuVBCC = (props) => {
 				maSinhVien: values.maSinhVien || undefined,
 				soHieuVanBang: values.soHieuVanBang || undefined,
 				soVaoSoBang: values.soVaoSoBang || undefined,
+				mucDichTraCuuId: DEFAULT_LOOKUP_PURPOSE_ID,
 				turnstileToken,
 			},
 			resetTurnstile,
@@ -96,6 +98,7 @@ const FormTraCuuVBCC = (props) => {
 	return (
 		<form onSubmit={handleSubmit} className="vbcc-form">
 			<Card
+				className="vbcc-form-card"
 				style={{
 					borderRadius: 16,
 					backgroundColor: "rgba(255, 255, 255, 0.15)",
@@ -104,7 +107,7 @@ const FormTraCuuVBCC = (props) => {
 					WebkitBackdropFilter: "blur(6px)",
 				}}
 			>
-				<CardContent style={{ padding: 24 }}>
+				<CardContent className="vbcc-form-card-content" style={{ padding: 24 }}>
 					<div className="vbcc-form-grid">
 						<Field label={t("index.form.fullname")}>
 							<Input
@@ -159,6 +162,7 @@ const FormTraCuuVBCC = (props) => {
 
 					{TURNSTILE_SITE_KEY ? (
 						<div
+							className="vbcc-turnstile"
 							style={{
 								display: "flex",
 								justifyContent: "center",
@@ -193,6 +197,7 @@ const FormTraCuuVBCC = (props) => {
 
 					<div className="vbcc-form-actions">
 						<Button
+							className="vbcc-reset-button"
 							type="button"
 							variant="secondary"
 							size="icon"
@@ -202,7 +207,11 @@ const FormTraCuuVBCC = (props) => {
 						>
 							<IconRotateArrow size={24} color="#134D8B" />
 						</Button>
-						<Button type="submit" style={{ color: "#ffffff" }}>
+						<Button
+							className="vbcc-search-button"
+							type="submit"
+							style={{ color: "#ffffff" }}
+						>
 							{t("index.form.search_button")}
 						</Button>
 					</div>
@@ -223,7 +232,7 @@ const FormTraCuuVBCC = (props) => {
 				}
 				:global(.vbcc-form label) {
 					color: #ffffff;
-					font-family: "Montserrat", sans-serif;
+					font-family: "Inter", sans-serif;
 					font-weight: 500;
 					font-size: 14px;
 					line-height: 170%;
@@ -248,6 +257,132 @@ const FormTraCuuVBCC = (props) => {
 				@media (min-width: 768px) {
 					.vbcc-form-grid {
 						grid-template-columns: repeat(3, minmax(0, 1fr));
+					}
+				}
+
+				.vbcc-form {
+					width: 100%;
+				}
+
+				:global(.vbcc-form-card) {
+					display: block !important;
+					width: 100% !important;
+					min-height: 360px;
+					padding: 0 !important;
+					gap: 0 !important;
+					background: rgba(255, 255, 255, 0.6) !important;
+					border: 2px solid rgba(255, 255, 255, 0.2) !important;
+					border-radius: 22px !important;
+					box-shadow: 0 0 32px rgba(0, 0, 0, 0.18) !important;
+					backdrop-filter: blur(12px);
+					-webkit-backdrop-filter: blur(12px);
+				}
+
+				:global(.vbcc-form-card-content) {
+					box-sizing: border-box;
+					padding: 24px !important;
+				}
+
+				.vbcc-form-grid {
+					column-gap: 16px;
+					row-gap: 16px;
+				}
+
+				:global(.vbcc-form label) {
+					color: #000000 !important;
+					font-family: "Inter", sans-serif !important;
+					font-weight: 400 !important;
+					font-size: 14px !important;
+					line-height: 20px !important;
+					letter-spacing: 0 !important;
+				}
+
+				:global(.vbcc-form [data-slot="input"]),
+				:global(.vbcc-form [data-slot="date-picker-field"]) {
+					height: 44px !important;
+					min-height: 44px !important;
+					padding: 0 16px !important;
+					color: rgba(0, 0, 0, 0.8) !important;
+					font-family: "Inter", sans-serif !important;
+					font-size: 16px !important;
+					line-height: 24px !important;
+					background: rgba(255, 255, 255, 0.08) !important;
+					border: 1px solid rgba(0, 0, 0, 0.1) !important;
+					border-radius: 22px !important;
+				}
+
+				:global(.vbcc-form [data-slot="input"]::placeholder) {
+					color: rgba(0, 0, 0, 0.6) !important;
+					opacity: 1;
+				}
+
+				:global(.vbcc-form [data-slot="date-picker-field"] [role="spinbutton"]) {
+					color: rgba(0, 0, 0, 0.8) !important;
+				}
+
+				:global(.vbcc-form [data-slot="date-picker-field"] [data-placeholder]),
+				:global(.vbcc-form [data-slot="date-picker-field"] [data-type="literal"]) {
+					color: rgba(0, 0, 0, 0.6) !important;
+				}
+
+				.vbcc-form-actions {
+					gap: 16px;
+					margin-top: 32px;
+				}
+
+				.vbcc-turnstile + .vbcc-form-actions {
+					margin-top: 16px;
+				}
+
+				:global(.vbcc-reset-button) {
+					width: 44px !important;
+					height: 44px !important;
+					min-width: 44px !important;
+					padding: 0 !important;
+					background: #ffffff !important;
+					border: 0 !important;
+					border-radius: 999px !important;
+					box-shadow: none !important;
+				}
+
+				:global(.vbcc-search-button) {
+					width: 178px !important;
+					height: 44px !important;
+					padding: 0 16px !important;
+					color: #ffffff !important;
+					font-family: "Inter", sans-serif !important;
+					font-size: 16px !important;
+					font-weight: 500 !important;
+					line-height: 24px !important;
+					background: rgba(19, 77, 139, 0.9) !important;
+					border: 0 !important;
+					border-radius: 999px !important;
+					box-shadow: none !important;
+					backdrop-filter: blur(12px);
+					-webkit-backdrop-filter: blur(12px);
+				}
+
+				@media (min-width: 768px) {
+					.vbcc-form-grid {
+						grid-template-columns: repeat(2, minmax(0, 1fr));
+					}
+				}
+
+				@media (max-width: 767px) {
+					:global(.vbcc-form-card) {
+						min-height: 0;
+					}
+
+					:global(.vbcc-form-card-content) {
+						padding: 20px !important;
+					}
+
+					.vbcc-form-grid {
+						row-gap: 12px;
+					}
+
+					.vbcc-form-actions {
+						margin-top: 24px;
 					}
 				}
 			`}</style>

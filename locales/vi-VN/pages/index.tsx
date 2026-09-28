@@ -1,7 +1,8 @@
 // @ts-nocheck
 module.exports = {
   question: "Bạn muốn tra cứu văn bằng chứng chỉ gì?",
-  prompt: "Vui lòng nhập thông tin để tra cứu",
+  // prompt: "Vui lòng nhập thông tin để tra cứu",
+  prompt: "Vui lòng cung cấp ít nhất 2 trong 6 trường để xác minh văn bằng.",
   form: {
     fullname: "Họ tên",
     enter_fullname: "Nhập họ tên",
@@ -28,6 +29,8 @@ module.exports = {
     detail: "Chi tiết",
     no_result_msg: "Không tồn tại thông tin văn bằng!",
     search_result_header: "Kết quả tra cứu",
+    result: "Kết quả",
+    results: "Kết quả",
     fill_info_prompt: "Vui lòng điền đầy đủ thông tin để tra cứu",
     empty: "Trống",
   },

@@ -1,6 +1,7 @@
 // @ts-nocheck
 module.exports = {
-  title: "Chi tiết kết quả tra cứu",
+  // title: "Chi tiết kết quả tra cứu",
+  title: "Kết quả tra cứu",
   verified: "Thông tin đã được xác thực",
   diploma_info: "Thông tin văn bằng",
   fullname: "Họ và tên",
@@ -9,6 +10,8 @@ module.exports = {
   education_level: "Trình độ đào tạo",
   education_form: "Hình thức đào tạo",
   major: "Ngành đào tạo",
+  specialization: "Chuyên ngành",
+  minor_specialization: "Chuyên ngành phụ",
   book_no: "Số vào sổ",
   diploma_no: "Số hiệu văn bằng",
   book_no_en: "Số vào sổ (Tiếng Anh)",
@@ -29,7 +32,10 @@ module.exports = {
   value_doctorate: "Tiến sĩ",
   value_full_time: "Chính quy",
   diploma_file: "Tệp tin văn bằng",
+  diploma_copy: "Bản sao văn bằng",
+  no_diploma_file: "Chưa có tệp văn bằng",
   ipfs_file: "Tệp tin IPFS",
+  print: "In văn bằng",
   signed_info: "Thông tin văn bằng đã được ký số:",
   check_signature: "Kiểm tra chữ ký số (JWS)",
   no_appendix_error: "Không tìm thấy thông tin phụ lục",

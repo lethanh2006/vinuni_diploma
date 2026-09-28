@@ -1,9 +1,9 @@
 // @ts-nocheck
 import styled from "styled-components";
 const SectionWrapper = styled.section`
-  &.vbcc-montserrat,
-  &.vbcc-montserrat *:not(.anticon) {
-    font-family: 'Montserrat', sans-serif;
+  &.vbcc-inter,
+  &.vbcc-inter *:not(.anticon) {
+    font-family: 'Inter', sans-serif;
   }
 
   .vbcc-form .ant-form-item-row {

@@ -1,6 +1,7 @@
 // @ts-nocheck
 module.exports = {
-  title: "Search Result Details",
+  // title: "Search Result Details",
+  title: "Search Results",
   verified: "Information Verified",
   diploma_info: "Diploma Information",
   fullname: "Full Name",
@@ -9,6 +10,8 @@ module.exports = {
   education_level: "Training Level",
   education_form: "Mode of Study",
   major: "Field of Study",
+  specialization: "Specialization",
+  minor_specialization: "Minor Specialization",
   book_no: "Reference Number",
   diploma_no: "Serial Number",
   book_no_en: "Reference Number (English)",
@@ -29,7 +32,10 @@ module.exports = {
   value_doctorate: "Doctoral Degree",
   value_full_time: "Full-time",
   diploma_file: "Diploma File",
+  diploma_copy: "Diploma copy",
+  no_diploma_file: "No diploma file available",
   ipfs_file: "IPFS File",
+  print: "Print diploma",
   signed_info: "Diploma information has been digitally signed:",
   check_signature: "Verify digital signature (JWS)",
   no_appendix_error: "Supplementary information not found",
