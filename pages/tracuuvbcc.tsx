@@ -11,7 +11,7 @@ import axios from "axios";
 import FormTraCuu from "components/Table/FormTraCuuVBCC";
 import TableTraCuuVBCC from "components/Table/TableTraCuuVBCC";
 import Container from "components/UI/Container";
-import { ipVbcc } from "data/ip";
+import { ipProxy } from "data/ip";
 import PropTypes from "prop-types";
 import "rc-tabs/assets/index.css";
 import React, { useEffect, useState } from "react";
@@ -28,45 +28,68 @@ const TraCuuVanBangChungChi = (props) => {
   const [loading, setloading] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [warningOpen, setWarningOpen] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
   const [dialogReady, setDialogReady] = useState(false);
 
   useEffect(() => {
     setDialogReady(true);
   }, []);
 
-  const traCuu = async (values) => {
-    const filledFields = Object.entries(values).filter(
+  const showWarning = (message) => {
+    setWarningMessage(message);
+    setWarningOpen(true);
+  };
+
+  const traCuu = async (values, resetTurnstile) => {
+    const { turnstileToken, ...searchValues } = values;
+    const filledFields = Object.entries(searchValues).filter(
       ([key, value]) => key !== "mucDichTraCuuId" && !!value,
     ).length;
 
     if (filledFields < 2) {
-      setWarningOpen(true);
-      return;
+      showWarning(t("index.messages.warning_2_fields"));
+      return false;
+    }
+
+    if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken) {
+      showWarning(t("index.messages.turnstile_required"));
+      return false;
     }
 
     setloading(true);
     setSelectedRecord(null);
     try {
       const data = await axios.post(
-        `${ipVbcc}/phu-luc-van-bang/public/tra-cuu-phu-luc-van-bang`,
-        values,
+        `${ipProxy}/qldt/phu-luc-van-bang/public/tra-cuu-phu-luc-van-bang`,
         {
-          headers: {
-            "ngrok-skip-browser-warning": "true",
-          },
+          ...searchValues,
+          ...(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
+            ? { turnstileToken }
+            : {}),
         },
       );
       const arr = data?.data?.data?.result ?? [];
       if (!Array.isArray(arr) || arr.length === 0) {
         setds({ Error: true });
-        return;
+      } else {
+        setds(arr);
       }
-      setds(arr);
     } catch (error) {
+      const errorCode = error?.response?.data?.code;
+      if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
+        if (errorCode === "error-turnstile-token-required") {
+          showWarning(t("index.messages.turnstile_required"));
+        } else if (errorCode === "error-turnstile-invalid") {
+          showWarning(t("index.messages.turnstile_invalid"));
+        }
+      }
       setds({ Error: true });
     } finally {
       setloading(false);
+      resetTurnstile?.();
     }
+
+    return true;
   };
 
   const tieuDeKQ = props.tieuDe;
@@ -93,7 +116,7 @@ const TraCuuVanBangChungChi = (props) => {
             <DialogHeader>
               <DialogTitle>{t("index.messages.warning")}</DialogTitle>
               <DialogDescription>
-                {t("index.messages.warning_2_fields")}
+                {warningMessage || t("index.messages.warning_2_fields")}
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
@@ -135,7 +158,8 @@ const TraCuuVanBangChungChi = (props) => {
                 </div>
                 <div style={{ width: "100%" }}>
                   <FormTraCuu
-                    onSubmit={(values) => traCuu(values)}
+                    onSubmit={traCuu}
+                    onWarning={showWarning}
                     onReset={() => {
                       setds([]);
                       setSelectedRecord(null);

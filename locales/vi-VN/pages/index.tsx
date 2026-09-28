@@ -34,6 +34,8 @@ module.exports = {
   messages: {
     warning: "Thông báo",
     warning_2_fields: "Vui lòng nhập ít nhất 2 thông tin để tra cứu",
+    turnstile_required: "Vui lòng hoàn thành xác thực bảo mật trước khi tra cứu.",
+    turnstile_invalid: "Xác thực bảo mật hết hạn hoặc không hợp lệ. Vui lòng thử lại.",
     no_info_found:
       "Thông tin nhập sai hoặc không tồn tại thông tin văn bằng chứng chỉ",
     under_development:

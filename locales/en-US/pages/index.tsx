@@ -34,6 +34,8 @@ module.exports = {
   messages: {
     warning: "Notification",
     warning_2_fields: "Please enter at least 2 fields to search",
+    turnstile_required: "Please complete the security check before searching.",
+    turnstile_invalid: "Security verification expired or invalid. Please try again.",
     no_info_found:
       "The information entered is incorrect or the diploma/certificate does not exist",
     under_development:
