@@ -65,6 +65,7 @@ const TraCuuVanBangChungChi = (props) => {
 
     setloading(true);
     setSelectedRecord(null);
+    setNotificationOpen(false);
     try {
       const data = await axios.post(
         // `${ipProxy}/qldt/phu-luc-van-bang/public/tra-cuu-phu-luc-van-bang`,
@@ -78,15 +79,11 @@ const TraCuuVanBangChungChi = (props) => {
         },
       );
       const arr = data?.data?.data?.result ?? [];
-      if (!Array.isArray(arr)) {
-        throw new Error("Invalid lookup response");
-      }
-      if (arr.length === 0) {
+      if (!Array.isArray(arr) || arr.length === 0) {
         setds({ Error: true });
-        showNotification(t("index.messages.lookup_not_found"));
+        showNotification(t("index.table.no_result_msg"));
       } else {
         setds(arr);
-        showNotification(t("index.messages.lookup_success"));
       }
     } catch (error) {
       const errorCode = error?.response?.data?.code;
@@ -95,6 +92,8 @@ const TraCuuVanBangChungChi = (props) => {
         messageKey = "index.messages.turnstile_required";
       } else if (errorCode === "error-turnstile-invalid") {
         messageKey = "index.messages.turnstile_invalid";
+      } else if (error?.response?.status === 404) {
+        messageKey = "index.table.no_result_msg";
       }
       showNotification(t(messageKey));
       setds({ Error: true, messageKey });

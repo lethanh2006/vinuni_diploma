@@ -37,10 +37,6 @@ module.exports = {
   messages: {
     warning: "Thông báo",
     warning_2_fields: "Vui lòng nhập ít nhất 2 thông tin để tra cứu",
-    lookup_success:
-      "Đã tìm thấy thông tin văn bằng/chứng chỉ phù hợp. Vui lòng xem kết quả bên dưới.",
-    lookup_not_found:
-      "Không tìm thấy thông tin văn bằng/chứng chỉ phù hợp. Vui lòng kiểm tra lại thông tin và thử lại.",
     lookup_failed: "Không thể tra cứu lúc này. Vui lòng thử lại sau.",
     turnstile_required: "Vui lòng hoàn thành xác thực bảo mật trước khi tra cứu.",
     turnstile_invalid: "Xác thực bảo mật hết hạn hoặc không hợp lệ. Vui lòng thử lại.",
