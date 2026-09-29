@@ -38,6 +38,11 @@ module.exports = {
   messages: {
     warning: "Notification",
     warning_2_fields: "Please enter at least 2 fields to search",
+    lookup_success:
+      "Matching diploma/certificate information was found. Please view the results below.",
+    lookup_not_found:
+      "No matching diploma/certificate information was found. Please check your details and try again.",
+    lookup_failed: "Unable to complete the search. Please try again later.",
     turnstile_required: "Please complete the security check before searching.",
     turnstile_invalid: "Security verification expired or invalid. Please try again.",
     no_info_found:

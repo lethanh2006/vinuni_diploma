@@ -331,7 +331,7 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
             >
               {t(
                 hasError
-                  ? "index.table.no_result_msg"
+                  ? thongTinTraCuu.messageKey || "index.table.no_result_msg"
                   : "index.table.fill_info_prompt",
               )}
             </span>

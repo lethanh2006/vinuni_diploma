@@ -29,8 +29,8 @@ const TraCuuVanBangChungChi = (props) => {
   const [ds, setds] = useState([]);
   const [loading, setloading] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const [warningOpen, setWarningOpen] = useState(false);
-  const [warningMessage, setWarningMessage] = useState("");
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
   const [dialogReady, setDialogReady] = useState(false);
 
   useEffect(() => {
@@ -42,9 +42,9 @@ const TraCuuVanBangChungChi = (props) => {
     };
   }, []);
 
-  const showWarning = (message) => {
-    setWarningMessage(message);
-    setWarningOpen(true);
+  const showNotification = (message) => {
+    setNotificationMessage(message);
+    setNotificationOpen(true);
   };
 
   const traCuu = async (values, resetTurnstile) => {
@@ -54,12 +54,12 @@ const TraCuuVanBangChungChi = (props) => {
     ).length;
 
     if (filledFields < 2) {
-      showWarning(t("index.messages.warning_2_fields"));
+      showNotification(t("index.messages.warning_2_fields"));
       return false;
     }
 
     if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !turnstileToken) {
-      showWarning(t("index.messages.turnstile_required"));
+      showNotification(t("index.messages.turnstile_required"));
       return false;
     }
 
@@ -78,21 +78,26 @@ const TraCuuVanBangChungChi = (props) => {
         },
       );
       const arr = data?.data?.data?.result ?? [];
-      if (!Array.isArray(arr) || arr.length === 0) {
+      if (!Array.isArray(arr)) {
+        throw new Error("Invalid lookup response");
+      }
+      if (arr.length === 0) {
         setds({ Error: true });
+        showNotification(t("index.messages.lookup_not_found"));
       } else {
         setds(arr);
+        showNotification(t("index.messages.lookup_success"));
       }
     } catch (error) {
       const errorCode = error?.response?.data?.code;
-      if (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
-        if (errorCode === "error-turnstile-token-required") {
-          showWarning(t("index.messages.turnstile_required"));
-        } else if (errorCode === "error-turnstile-invalid") {
-          showWarning(t("index.messages.turnstile_invalid"));
-        }
+      let messageKey = "index.messages.lookup_failed";
+      if (errorCode === "error-turnstile-token-required") {
+        messageKey = "index.messages.turnstile_required";
+      } else if (errorCode === "error-turnstile-invalid") {
+        messageKey = "index.messages.turnstile_invalid";
       }
-      setds({ Error: true });
+      showNotification(t(messageKey));
+      setds({ Error: true, messageKey });
     } finally {
       setloading(false);
       resetTurnstile?.();
@@ -120,12 +125,12 @@ const TraCuuVanBangChungChi = (props) => {
   return (
     <div style={{ width: "100%", position: "relative" }}>
       {dialogReady ? (
-        <Dialog open={warningOpen} onOpenChange={setWarningOpen}>
+        <Dialog open={notificationOpen} onOpenChange={setNotificationOpen}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{t("index.messages.warning")}</DialogTitle>
               <DialogDescription>
-                {warningMessage || t("index.messages.warning_2_fields")}
+                {notificationMessage || t("index.messages.warning_2_fields")}
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
@@ -200,7 +205,7 @@ const TraCuuVanBangChungChi = (props) => {
                 <div className="vbcc-hero-form" style={{ width: "100%" }}>
                   <FormTraCuu
                     onSubmit={traCuu}
-                    onWarning={showWarning}
+                    onWarning={showNotification}
                     onReset={() => {
                       setds([]);
                       setSelectedRecord(null);
