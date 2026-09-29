@@ -1,6 +1,13 @@
-const normalizeBaseUrl = (value: string) => value.replace(/\/+$/, "");
+const normalizeBaseUrl = (value: string | undefined, fallback: string) =>
+  (value?.trim() || fallback).replace(/\/+$/, "");
 
-/** Base URL for the public education/news API. Configure with NEXT_PUBLIC_API_URL. */
-export const ip = normalizeBaseUrl(process.env.NEXT_PUBLIC_API_URL);
+/** Public API URL. Use the default when no build-time override is configured. */
+export const ip = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_API_URL,
+  "https://apigw-vinuni.ript.vn",
+);
 
-export const ipProxy = normalizeBaseUrl(process.env.NEXT_PUBLIC_PROXY_URL);
+export const ipProxy = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_PROXY_URL,
+  "https://proxy.apigw-vinuni.ript.vn",
+);

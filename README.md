@@ -12,7 +12,15 @@ Copy `.env.example` to `.env.local` and update the API URLs when needed:
 cp .env.example .env.local
 ```
 
-`NEXT_PUBLIC_API_URL` is the shared base URL for the education/news API. The old `ip`, `ip2`, and `ip3` values have been consolidated into this variable. `NEXT_PUBLIC_VBCC_API_URL` configures the diploma/certificate API exposed as `ipVbcc`.
+`NEXT_PUBLIC_API_URL` is the shared base URL for the education/news and diploma/certificate APIs. `NEXT_PUBLIC_PROXY_URL` configures the proxy URL exposed as `ipProxy`. If either variable is missing or blank, the app uses its VinUni URL from `.env.example`.
+
+### Deploying to Vercel
+
+Use the Next.js framework preset, Node.js `24.x`, and `yarn build` as the build command. Install dependencies with `yarn install --frozen-lockfile`.
+
+The local `.env` file is ignored by Git and is not uploaded with the repository. To override the default API URLs, add `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_PROXY_URL` in the Vercel project's environment variables. Add `NEXT_PUBLIC_TURNSTILE_SITE_KEY` to enable Turnstile, using a site key configured for the deployment domain.
+
+Set the variables for the deployment environment you use (Production or Preview), then redeploy: `NEXT_PUBLIC_*` values are embedded in the browser bundle at build time.
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
