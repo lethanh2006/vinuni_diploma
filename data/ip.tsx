@@ -4,7 +4,7 @@ const normalizeBaseUrl = (value: string | undefined, fallback: string) =>
 /** Public API URL. Use the default when no build-time override is configured. */
 export const ip = normalizeBaseUrl(
   process.env.NEXT_PUBLIC_API_URL,
-  "https://apigw-vinuni.ript.vn",
+  "https://gwdu.ptit.edu.vn",
 );
 
 export const ipProxy = normalizeBaseUrl(
