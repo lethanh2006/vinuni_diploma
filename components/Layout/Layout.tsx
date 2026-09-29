@@ -16,9 +16,6 @@ import { ThemeProvider } from "styled-components";
 import { hostingTheme } from "./hosting";
 import { ContentWrapper, GlobalStyle } from "./hosting.style";
 
-export const siteTitle = "VinUni Cổng tra cứu văn bằng";
-const siteDescription = "Cổng tra cứu và xác thực thông tin văn bằng VinUni";
-
 export default function Layout({ children, home }) {
   const scrollToTop = () => {
     if (window) {
@@ -43,14 +40,7 @@ export default function Layout({ children, home }) {
           href="/assets/image/logo_vinuni.png"
         />
         <link rel="apple-touch-icon" href="/assets/image/logo.png" />
-        <link rel="prefetch" href="/assets/image/metadata.png" />
-        <title>{siteTitle}</title>
-        <meta name="description" content={siteDescription} />
         <meta name="theme-color" content="#134D8B" />
-        <meta property="og:title" content={siteTitle} />
-        <meta property="og:description" content={siteDescription} />
-        <meta property="og:image" content="/assets/image/metadata.png" />
-        <meta name="twitter:card" content="summary_large_image" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {/* navbar */}

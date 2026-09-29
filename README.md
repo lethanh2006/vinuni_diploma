@@ -22,6 +22,12 @@ The local `.env` file is ignored by Git and is not uploaded with the repository.
 
 Set the variables for the deployment environment you use (Production or Preview), then redeploy: `NEXT_PUBLIC_*` values are embedded in the browser bundle at build time.
 
+### Link previews
+
+The VinUni title, description, and social preview tags are configured in `pages/_app.tsx`. The preview image is `public/assets/image/metadata.jpg`; the original `metadata.png` remains available for existing links.
+
+Preview image URLs use `NEXT_PUBLIC_SITE_URL` when set (a full URL such as `https://vinuni-diploma.vercel.app`), otherwise Vercel's `NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL`, then `https://vinuni-diploma.vercel.app`. Set `NEXT_PUBLIC_SITE_URL` and rebuild when hosting on another platform or overriding the domain.
+
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
 Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
