@@ -546,9 +546,9 @@
   }
 
   .vbcc-back-group {
-    flex: 0 0 auto;
+    flex: 0 0 83px;
     align-self: auto;
-    width: 98px;
+    width: 83px;
     height: 32px;
     gap: 16px;
   }
@@ -562,11 +562,17 @@
     font-size: 16px;
     font-weight: 500;
     line-height: 24px;
+
+    > span {
+      flex: 0 0 auto;
+      width: auto;
+      height: 24px;
+    }
   }
 
   .vbcc-header-divider {
     display: block;
-    transform: rotate(90deg);
+    transform: none;
   }
 
   .vbcc-detail-title {
@@ -577,7 +583,9 @@
     height: 28px;
     font-family: "Inter", sans-serif;
     font-size: 18px;
+    font-weight: 600;
     line-height: 28px;
+    color: #000000;
 
     > span {
       flex: 0 1 auto;
@@ -598,14 +606,29 @@
     min-height: 32px;
     padding: 6px 12px;
     gap: 12px;
+    border-color: #00b42a;
+    background: #e8ffea;
+    color: #00b42a;
     font-family: "Inter", sans-serif;
     font-size: 14px;
+    font-weight: 500;
     line-height: 20px;
+  }
+
+  .vbcc-detail-main-grid {
+    gap: 20px;
+  }
+
+  .vbcc-document-card {
+    padding: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 22px;
   }
 
   .vbcc-info-grid {
     grid-template-columns: 1fr;
-    width: calc(100% - 32px);
+    width: calc(100% - 40px);
+    margin: 0 20px;
   }
 
   .vbcc-info-item.is-wide {
@@ -615,6 +638,66 @@
   .vbcc-document-preview {
     height: auto;
     aspect-ratio: 321 / 225.42;
+  }
+
+  .vbcc-document-actions {
+    gap: 16px;
+    padding-top: 16px;
+  }
+
+  .vbcc-document-action {
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 1000px;
+  }
+
+  .vbcc-pdf-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .vbcc-info-stack {
+    gap: 20px;
+  }
+
+  .vbcc-info-card {
+    gap: 16px;
+    padding: 24px 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 22px;
+  }
+
+  .vbcc-info-title {
+    flex-basis: 24px;
+    height: 24px;
+    color: #2e548a;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: 0;
+
+    &::after {
+      height: 1px;
+    }
+  }
+
+  .vbcc-info-item {
+    gap: 4px;
+    min-height: 48px;
+
+    dt {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    dd {
+      color: #000000;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+    }
   }
 
   .vbcc-custom-descriptions {
@@ -629,9 +712,9 @@
     font-size: 18px;
 
     svg {
-      flex-basis: 28px;
-      width: 28px;
-      height: 28px;
+      flex-basis: 24px;
+      width: 24px;
+      height: 24px;
     }
   }
 }

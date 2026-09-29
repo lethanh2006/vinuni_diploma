@@ -20,30 +20,31 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
   const { t } = useTranslation();
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const mobileColumnWidth = "max(124px, calc((100vw - 72px) / 2))";
+  const desktopDataColumnWidth = "calc((100% - 100px) / 5)";
 
   const columns = [
     {
       title: t("index.table.book_no"),
       dataIndex: ["DuLieu", "soVaoSoBang"],
       key: "soVaoSoBang",
-      width: isMobile ? mobileColumnWidth : 200,
+      width: isMobile ? mobileColumnWidth : desktopDataColumnWidth,
     },
     {
       title: t("index.table.diploma_no"),
       dataIndex: ["DuLieu", "soHieuVanBang"],
       key: "soHieuVanBang",
-      width: isMobile ? mobileColumnWidth : 200,
+      width: isMobile ? mobileColumnWidth : desktopDataColumnWidth,
     },
     {
       title: t("index.table.fullname"),
       dataIndex: ["DuLieu", "hoTen"],
       key: "hoTen",
-      width: 280,
+      width: desktopDataColumnWidth,
     },
     {
       title: t("index.table.dob"),
       key: "ngaySinh",
-      width: 200,
+      width: desktopDataColumnWidth,
       render: (_, record) =>
         record?.DuLieu?.ngaySinh
           ? moment(record.DuLieu.ngaySinh).format("DD/MM/YYYY")
@@ -53,13 +54,13 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
       title: t("index.table.student_id"),
       dataIndex: ["DuLieu", "maSinhVien"],
       key: "maSinhVien",
-      width: 200,
+      width: desktopDataColumnWidth,
     },
     {
       title: t("index.table.action"),
       key: "action",
       align: "center",
-      width: 80,
+      width: 100,
       render: (val, rec) => (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -71,10 +72,12 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
                   alignItems: "center",
                   cursor: rec?.DuLieu?._id ? "pointer" : "not-allowed",
                   opacity: rec?.DuLieu?._id ? 1 : 0.5,
-                  width: "36px",
-                  height: "36px",
-                  background: "#F4F4F4",
-                  borderRadius: "999px",
+                  width: "44px",
+                  height: "44px",
+                  background: "rgba(0, 0, 0, 0.05)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
+                  borderRadius: "1000px",
                   border: "none",
                   transition: "background 0.2s ease",
                 }}
@@ -84,27 +87,26 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
                 }}
               >
                 <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <circle
-                    cx="8.13379"
-                    cy="9.19995"
-                    r="2"
-                    stroke="#2E2E2E"
+                  <ellipse
+                    cx="12"
+                    cy="12"
+                    rx="10"
+                    ry="7"
+                    stroke="#000000"
                     strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
                   />
-                  <path
-                    d="M13.6003 10.1334C13.6003 7.11426 11.1528 4.66675 8.13366 4.66675C5.1145 4.66675 2.66699 7.11426 2.66699 10.1334"
-                    stroke="#2E2E2E"
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="3"
+                    stroke="#000000"
                     strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
                   />
                 </svg>
               </a>
@@ -123,10 +125,12 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
                     alignItems: "center",
                     cursor: rec?.DuLieu?._id ? "pointer" : "not-allowed",
                     opacity: rec?.DuLieu?._id ? 1 : 0.5,
-                    width: "36px",
-                    height: "36px",
-                    background: "#F4F4F4",
-                    borderRadius: "999px",
+                    width: "44px",
+                    height: "44px",
+                    background: "rgba(0, 0, 0, 0.05)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    borderRadius: "1000px",
                     border: "none",
                     transition: "background 0.2s ease",
                   }}
@@ -135,27 +139,26 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
                   }}
                 >
                   <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <circle
-                      cx="8.13379"
-                      cy="9.19995"
-                      r="2"
-                      stroke="#2E2E2E"
+                    <ellipse
+                      cx="12"
+                      cy="12"
+                      rx="10"
+                      ry="7"
+                      stroke="#000000"
                       strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
                     />
-                    <path
-                      d="M13.6003 10.1334C13.6003 7.11426 11.1528 4.66675 8.13366 4.66675C5.1145 4.66675 2.66699 7.11426 2.66699 10.1334"
-                      stroke="#2E2E2E"
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="3"
+                      stroke="#000000"
                       strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
                     />
                   </svg>
                 </a>
@@ -335,113 +338,134 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
           </div>
         ) : (
           <>
-          <div
-            className="vbcc-result-table-card"
-            style={{
-              width: "100%",
-              boxSizing: "border-box",
-              overflow: "hidden",
-              background: "#FFFFFF",
-              borderRadius: "16px",
-              padding: "20px",
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.02)",
-            }}
-          >
-            <div style={{ width: "100%", overflowX: "auto" }}>
-              <Table density="compact" className="custom-table-vbcc">
-                <TableHeader>
-                  <TableRow>
+            <div
+              className="vbcc-result-table-card"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "24px",
+                width: "100%",
+                boxSizing: "border-box",
+                overflow: "hidden",
+                background: "#FFFFFF",
+                border: "1px solid rgba(0, 0, 0, 0.1)",
+                borderRadius: "22px",
+                padding: "20px",
+              }}
+            >
+              <div style={{ width: "100%", overflowX: "auto" }}>
+                <Table density="compact" className="custom-table-vbcc">
+                  <colgroup>
                     {columns.map((column) => (
-                      <TableHead
-                        key={column.key}
-                        style={{
-                          width: column.width,
-                          textAlign: column.align,
-                        }}
-                      >
-                        {column.title}
-                      </TableHead>
+                      <col key={column.key} style={{ width: column.width }} />
                     ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {dataSource.map((record) => (
-                    <TableRow key={record.key}>
+                  </colgroup>
+                  <TableHeader>
+                    <TableRow>
                       {columns.map((column) => (
-                        <TableCell
+                        <TableHead
                           key={column.key}
-                          style={{ textAlign: column.align }}
+                          style={{
+                            width: column.width,
+                            textAlign: "left",
+                          }}
                         >
-                          {column.render
-                            ? column.render(undefined, record)
-                            : column.dataIndex.reduce(
-                                (current, key) => current?.[key],
-                                record,
-                              )}
-                        </TableCell>
+                          {column.title}
+                        </TableHead>
                       ))}
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-          <div className="vbcc-result-mobile-list">
-            {dataSource.map((record) => {
-              const data = record?.DuLieu || {};
-              const canView = Boolean(data._id);
-              const fields = [
-                {
-                  label: t("index.table.dob"),
-                  value: data.ngaySinh
-                    ? moment(data.ngaySinh).format("DD/MM/YYYY")
-                    : "—",
-                },
-                { label: t("index.table.student_id"), value: data.maSinhVien },
-                { label: t("index.table.book_no"), value: data.soVaoSoBang },
-                { label: t("index.table.diploma_no"), value: data.soHieuVanBang },
-              ];
-              const content = (
-                <>
-                  <span className="vbcc-result-mobile-name">{data.hoTen || "—"}</span>
-                  <span className="vbcc-result-mobile-divider" aria-hidden="true" />
-                  <span className="vbcc-result-mobile-fields">
-                    {fields.map((field) => (
-                      <span className="vbcc-result-mobile-field" key={field.label}>
-                        <span className="vbcc-result-mobile-label">{field.label}</span>
-                        <span className="vbcc-result-mobile-value">{field.value || "—"}</span>
-                      </span>
+                  </TableHeader>
+                  <TableBody>
+                    {dataSource.map((record) => (
+                      <TableRow key={record.key}>
+                        {columns.map((column) => (
+                          <TableCell
+                            key={column.key}
+                            style={{ textAlign: column.align }}
+                          >
+                            {column.render
+                              ? column.render(undefined, record)
+                              : column.dataIndex.reduce(
+                                  (current, key) => current?.[key],
+                                  record,
+                                )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
                     ))}
-                  </span>
-                </>
-              );
-              const label = canView
-                ? `${t("index.table.detail")}: ${data.hoTen || data.maSinhVien || data.soHieuVanBang || ""}`
-                : t("index.table.no_info");
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+            <div className="vbcc-result-mobile-list">
+              {dataSource.map((record) => {
+                const data = record?.DuLieu || {};
+                const canView = Boolean(data._id);
+                const fields = [
+                  {
+                    label: t("index.table.dob"),
+                    value: data.ngaySinh
+                      ? moment(data.ngaySinh).format("DD/MM/YYYY")
+                      : "—",
+                  },
+                  { label: t("index.table.student_id"), value: data.maSinhVien },
+                  { label: t("index.table.book_no"), value: data.soVaoSoBang },
+                  { label: t("index.table.diploma_no"), value: data.soHieuVanBang },
+                ];
+                const content = (
+                  <>
+                    <span className="vbcc-result-mobile-name">
+                      {data.hoTen || "—"}
+                    </span>
+                    <span
+                      className="vbcc-result-mobile-divider"
+                      aria-hidden="true"
+                    />
+                    <span className="vbcc-result-mobile-fields">
+                      {fields.map((field) => (
+                        <span
+                          className="vbcc-result-mobile-field"
+                          key={field.label}
+                        >
+                          <span className="vbcc-result-mobile-label">
+                            {field.label}
+                          </span>
+                          <span className="vbcc-result-mobile-value">
+                            {field.value || "—"}
+                          </span>
+                        </span>
+                      ))}
+                    </span>
+                  </>
+                );
+                const label = canView
+                  ? `${t("index.table.detail")}: ${data.hoTen || data.maSinhVien || data.soHieuVanBang || ""}`
+                  : t("index.table.no_info");
 
-              return onViewDetail || !canView ? (
-                <button
-                  className="vbcc-result-mobile-card"
-                  type="button"
-                  key={record.key}
-                  disabled={!canView}
-                  aria-label={label}
-                  onClick={() => onViewDetail?.(record)}
-                >
-                  {content}
-                </button>
-              ) : (
-                <Link
-                  className="vbcc-result-mobile-card"
-                  href={`/vanbangchungchi/${data._id}`}
-                  key={record.key}
-                  aria-label={label}
-                >
-                  {content}
-                </Link>
-              );
-            })}
-          </div>
+                return onViewDetail || !canView ? (
+                  <button
+                    className="vbcc-result-mobile-card"
+                    type="button"
+                    key={record.key}
+                    disabled={!canView}
+                    aria-label={label}
+                    onClick={() => onViewDetail?.(record)}
+                  >
+                    {content}
+                  </button>
+                ) : (
+                  <Link
+                    className="vbcc-result-mobile-card"
+                    href={`/vanbangchungchi/${data._id}`}
+                    key={record.key}
+                    aria-label={label}
+                  >
+                    {content}
+                  </Link>
+                );
+              })}
+            </div>
           </>
         )}
       </div>
@@ -458,57 +482,84 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
           white-space: nowrap;
         }
         .custom-table-vbcc {
+          width: 100%;
           min-width: 900px;
-          border: 1px solid #f4f4f4 !important;
+          table-layout: fixed;
+          box-sizing: border-box;
+          border: 1px solid rgba(0, 0, 0, 0.1) !important;
           background: #ffffff !important;
           border-collapse: separate !important;
-          border-radius: 6px !important;
+          border-radius: 8px !important;
           border-spacing: 0 !important;
           overflow: hidden !important;
         }
         .vbcc-result-table-card [data-slot="table-container"] {
-          border-radius: 6px !important;
+          border-radius: 8px !important;
+        }
+        .custom-table-vbcc
+          [data-slot="table-header"]
+          > [data-slot="table-row"] {
+          height: 44px !important;
         }
         .custom-table-vbcc [data-slot="table-head"] {
+          position: relative;
+          box-sizing: border-box;
           font-family: "Inter", sans-serif !important;
           font-style: normal !important;
-          font-weight: 600 !important;
-          font-size: 12px !important;
-          line-height: 170% !important;
-          letter-spacing: 0.015em !important;
-          color: #2e2e2e !important;
-          background: #f4f4f4 !important;
-          padding: 12px !important;
+          font-weight: 400 !important;
+          font-size: 14px !important;
+          line-height: 20px !important;
+          letter-spacing: 0 !important;
+          text-align: left !important;
+          color: rgba(0, 0, 0, 0.6) !important;
+          background: rgba(0, 0, 0, 0.03) !important;
+          padding: 12px 10px !important;
           height: 44px !important;
-          border-bottom: none !important;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
           border-right: none !important;
-          border-left: 1px solid #ffffff !important;
+          border-left: none !important;
           white-space: nowrap !important;
         }
         .custom-table-vbcc [data-slot="table-head"] * {
           font-family: "Inter", sans-serif !important;
           font-style: normal !important;
-          font-weight: 600 !important;
-          font-size: 12px !important;
-          line-height: 170% !important;
-          letter-spacing: 0.015em !important;
-          color: #2e2e2e !important;
+          font-weight: 400 !important;
+          font-size: 14px !important;
+          line-height: 20px !important;
+          letter-spacing: 0 !important;
+          color: rgba(0, 0, 0, 0.6) !important;
         }
-        .custom-table-vbcc [data-slot="table-head"]:first-child {
-          border-left: none !important;
+        .custom-table-vbcc [data-slot="table-head"]:last-child {
+          padding-right: 16px !important;
+          padding-left: 16px !important;
+        }
+        .custom-table-vbcc [data-slot="table-head"]:not(:first-child)::before {
+          position: absolute;
+          top: 12px;
+          bottom: 12px;
+          left: 0;
+          width: 1px;
+          background: rgba(0, 0, 0, 0.06);
+          content: "";
+        }
+        .custom-table-vbcc
+          [data-slot="table-body"]
+          > [data-slot="table-row"] {
+          height: 64px !important;
         }
         .custom-table-vbcc [data-slot="table-cell"] {
+          box-sizing: border-box;
           font-family: "Inter", sans-serif !important;
           font-style: normal !important;
           font-weight: 400 !important;
           font-size: 14px !important;
-          line-height: 170% !important;
-          letter-spacing: 0.015em !important;
-          color: #2e2e2e !important;
+          line-height: 20px !important;
+          letter-spacing: 0 !important;
+          color: #000000 !important;
           background: #ffffff !important;
-          padding: 12px !important;
-          height: 48px !important;
-          border-bottom: 1px solid #f4f4f4 !important;
+          padding: 0 10px !important;
+          height: 64px !important;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
           border-right: none !important;
           border-left: none !important;
           white-space: nowrap !important;
@@ -518,9 +569,14 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
           font-style: normal !important;
           font-weight: 400 !important;
           font-size: 14px !important;
-          line-height: 170% !important;
-          letter-spacing: 0.015em !important;
-          color: #2e2e2e !important;
+          line-height: 20px !important;
+          letter-spacing: 0 !important;
+          color: #000000 !important;
+        }
+        .custom-table-vbcc [data-slot="table-cell"]:last-child {
+          padding-right: 16px !important;
+          padding-left: 16px !important;
+          text-align: center !important;
         }
         .custom-table-vbcc
           [data-slot="table-body"]
@@ -542,7 +598,7 @@ const KetQuaVanBang = ({ thongTinTraCuu = [], onViewDetail }) => {
             border-bottom: none !important;
           }
           .vbcc-result-table-card {
-            display: none;
+            display: none !important;
           }
           .vbcc-empty-image,
           .vbcc-empty-image img {
