@@ -84,6 +84,7 @@ const TraCuuVanBangChungChi = (props) => {
         showNotification(t("index.table.no_result_msg"));
       } else {
         setds(arr);
+        setSelectedRecord(arr.length === 1 ? arr[0] : null);
       }
     } catch (error) {
       const errorCode = error?.response?.data?.code;
@@ -216,7 +217,10 @@ const TraCuuVanBangChungChi = (props) => {
             {selectedRecord ? (
               <ChiTietVanBang
                 record={selectedRecord}
-                onBack={() => setSelectedRecord(null)}
+                onBack={() => {
+                  setSelectedRecord(null);
+                  if (ds.length === 1) setds([]);
+                }}
               />
             ) : (
               <TableTraCuuVBCC
@@ -234,10 +238,8 @@ const TraCuuVanBangChungChi = (props) => {
                 role="img"
                 aria-label="VinUniversity accreditations and rankings"
               >
-                <span className="vbcc-accreditation-logo vbcc-accreditation-logo--gptw" />
-                <span className="vbcc-accreditation-logo vbcc-accreditation-logo--fibaa" />
-                <span className="vbcc-accreditation-logo vbcc-accreditation-logo--qs" />
-                <span className="vbcc-accreditation-logo vbcc-accreditation-logo--stars" />
+                <div className="vbcc-frame vbcc-frame--top" />
+                <div className="vbcc-frame vbcc-frame--bottom" />
               </div>
             </div>
           </Container>
@@ -463,12 +465,6 @@ const TraCuuVanBangChungChi = (props) => {
 
           .vbcc-lookup-page .vbcc-accreditation-strip {
             height: 348px;
-            background:
-              url("/assets/image/bgfooter2.png") -135px 0 / 1384.35px 220.55px
-                no-repeat,
-              url("/assets/image/bgfooter2.png") -245px 221px / 797.89px 127px
-                no-repeat,
-              #ffffff;
             background: #ffffff;
           }
 
@@ -477,46 +473,32 @@ const TraCuuVanBangChungChi = (props) => {
           }
 
           .vbcc-lookup-page .vbcc-mobile-accreditations {
-            display: grid;
+            display: flex;
+            flex-direction: column;
             width: 100%;
             height: 348px;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            grid-template-rows: 221px 127px;
+            overflow: hidden;
+            background: #ffffff;
           }
 
-          .vbcc-lookup-page .vbcc-accreditation-logo {
-            align-self: center;
-            justify-self: center;
+          .vbcc-lookup-page .vbcc-frame {
+            flex: none;
+            align-self: stretch;
+            width: 100%;
             background-image: url("/assets/image/bgfooter2.png");
             background-repeat: no-repeat;
           }
 
-          .vbcc-lookup-page .vbcc-accreditation-logo--gptw {
-            width: 87px;
-            height: 178px;
-            background-position: -329px -50px;
-            background-size: 1600px 255px;
+          .vbcc-lookup-page .vbcc-frame--top {
+            height: 221px;
+            background-position: -218px 0;
+            background-size: 1384.35px 220.55px;
           }
 
-          .vbcc-lookup-page .vbcc-accreditation-logo--fibaa {
-            width: 98px;
-            height: 162px;
-            background-position: -519px -58px;
-            background-size: 1600px 255px;
-          }
-
-          .vbcc-lookup-page .vbcc-accreditation-logo--qs {
-            width: 70px;
-            height: 70px;
-            background-position: -291px -23px;
-            background-size: 650px 104px;
-          }
-
-          .vbcc-lookup-page .vbcc-accreditation-logo--stars {
-            width: 125px;
-            height: 70px;
-            background-position: -381px -23px;
-            background-size: 650px 104px;
+          .vbcc-lookup-page .vbcc-frame--bottom {
+            height: 127px;
+            background-position: -328px 0;
+            background-size: 797.89px 127px;
           }
 
           body.vbcc-lookup-active .footer-container {
