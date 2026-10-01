@@ -33,8 +33,10 @@ const downloadOriginalPdf = async (documentUrl, filename) => {
   if (!(["http:", "https:"].includes(url.protocol))) return false;
   if (/\.(png|jpe?g|gif|webp|svg)(?:$|[?#])/i.test(url.pathname)) return false;
 
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 15000);
   try {
-    const response = await fetch(url.href);
+    const response = await fetch(url.href, { signal: controller.signal });
     if (!response.ok) return false;
 
     const blob = await response.blob();
@@ -46,6 +48,8 @@ const downloadOriginalPdf = async (documentUrl, filename) => {
   } catch {
     // A remote host may block cross-origin reads. Export the visible details then.
     return false;
+  } finally {
+    window.clearTimeout(timeout);
   }
 };
 
@@ -55,48 +59,78 @@ const downloadVisibleDetails = async (card, filename) => {
     import("jspdf"),
   ]);
 
+  const scale = window.innerWidth <= 767 ? 1.5 : 2;
+  const protectedBlocks: Array<{ top: number; bottom: number }> = [];
   const canvas = await html2canvas(card, {
     backgroundColor: "#fff",
-    scale: window.innerWidth <= 767 ? 1.5 : 2,
+    scale,
     useCORS: true,
     windowWidth: 1200,
-    onclone: (clonedDocument) => {
-      const clonedCard = clonedDocument.querySelector<HTMLElement>(".vbcc-detail-card");
-      if (clonedCard) {
-        clonedCard.style.width = "960px";
-        clonedCard.style.maxWidth = "960px";
-        clonedCard.closest(".vbcc-theme-dark")?.classList.remove("vbcc-theme-dark");
-      }
-      const actions = clonedCard?.querySelector<HTMLElement>(".vbcc-detail-actions");
-      if (actions) actions.style.display = "none";
-      const error = clonedCard?.querySelector<HTMLElement>(".vbcc-detail-download-error");
-      if (error) error.style.display = "none";
+    scrollX: 0,
+    scrollY: 0,
+    logging: false,
+    onclone: (clonedDocument, clonedCard) => {
+      // Render only the card with light theme styles, even when the page is dark.
+      clonedDocument.body.replaceChildren(clonedCard);
+      clonedDocument.body.setAttribute("data-vinuni-ui", "true");
+      clonedDocument.body.setAttribute("data-vinuni-theme", "light");
+      Object.assign(clonedDocument.documentElement.style, {
+        backgroundColor: "#fff", colorScheme: "light",
+      });
+      Object.assign(clonedDocument.body.style, {
+        margin: "0", padding: "0", width: "960px", backgroundColor: "#fff", color: "#000",
+      });
+      Object.assign(clonedCard.style, {
+        width: "960px", maxWidth: "960px", margin: "0", boxShadow: "none",
+      });
+      clonedCard.querySelector(".vbcc-detail-actions")?.remove();
+      clonedCard.querySelector(".vbcc-detail-download-error")?.remove();
+      const cardTop = clonedCard.getBoundingClientRect().top;
+      clonedCard.querySelectorAll(".vbcc-detail-field, .vbcc-detail-section-title, .vbcc-detail-student-heading").forEach((element) => {
+        const rect = element.getBoundingClientRect();
+        protectedBlocks.push({
+          top: Math.floor((rect.top - cardTop) * scale),
+          bottom: Math.ceil((rect.bottom - cardTop) * scale),
+        });
+      });
     },
   });
 
-  const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
   const margin = 10;
   const contentWidth = 210 - margin * 2;
   const contentHeight = 297 - margin * 2;
   const pageHeightPixels = Math.floor((canvas.width * contentHeight) / contentWidth);
 
-  for (let top = 0; top < canvas.height; top += pageHeightPixels) {
+  for (let top = 0; top < canvas.height;) {
     if (top) pdf.addPage();
-    const sliceHeight = Math.min(pageHeightPixels, canvas.height - top);
+    let bottom = Math.min(top + pageHeightPixels, canvas.height);
+    const crossingBlocks = protectedBlocks.filter((block) =>
+      block.top > top && block.top < bottom && block.bottom > bottom,
+    );
+    if (crossingBlocks.length) bottom = Math.min(...crossingBlocks.map((block) => block.top));
+    const sliceHeight = bottom - top;
     const pageCanvas = document.createElement("canvas");
     pageCanvas.width = canvas.width;
     pageCanvas.height = sliceHeight;
-    pageCanvas.getContext("2d").drawImage(
+    const context = pageCanvas.getContext("2d");
+    if (!context) throw new Error("Could not create the PDF canvas");
+    context.drawImage(
       canvas, 0, top, canvas.width, sliceHeight,
       0, 0, canvas.width, sliceHeight,
     );
     pdf.addImage(
-      pageCanvas.toDataURL("image/png"), "PNG", margin, margin,
+      pageCanvas.toDataURL("image/jpeg", .92), "JPEG", margin, margin,
       contentWidth, (sliceHeight * contentWidth) / canvas.width,
     );
+    pageCanvas.width = 0;
+    pageCanvas.height = 0;
+    top = bottom;
   }
 
-  pdf.save(filename);
+  saveBlob(pdf.output("blob"), filename);
+  canvas.width = 0;
+  canvas.height = 0;
 };
 
 export const downloadDetailPdf = async ({ card, record, documentUrl }) => {
