@@ -541,7 +541,7 @@ const Navbar = ({ navbarStyle, logoStyle, button, row, menuWrapper }) => {
 
         <BottomRow>
           <LogoArea href="/">
-            <LogoImg src="/assets/image/textngang.svg" alt="VinUni Logo" />
+            <LogoImg src="/assets/image/textngang.png" alt="VinUni Logo" />
           </LogoArea>
         </BottomRow>
       </InnerWrap>

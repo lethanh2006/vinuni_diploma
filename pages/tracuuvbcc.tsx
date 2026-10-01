@@ -5,26 +5,54 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  IconMoon,
+  IconSun,
+  Logo,
+  SidebarDock,
+  SidebarDockBrand,
+  SidebarDockFooter,
+  SidebarDockSwitcher,
+  SidebarDockSwitcherItem,
+  SidebarDockThemeToggle,
+  SidebarDockWordmark,
   Spinner,
+  useUi,
 } from "@vinuni/ui";
 import axios from "axios";
 import FormTraCuu from "components/Table/FormTraCuuVBCC";
-import TableTraCuuVBCC from "components/Table/TableTraCuuVBCC";
 import Container from "components/UI/Container";
 import { ip } from "data/ip";
 // import { ipProxy } from "data/ip";
-import PropTypes from "prop-types";
 import "rc-tabs/assets/index.css";
 import React, { useEffect, useState } from "react";
-import { useMediaQuery } from "react-responsive";
 import SectionWrapper from "../styles/vanbangchungchi.style";
 import { useTranslation } from "components/Utils/useTranslation";
 import ChiTietVanBang from "./vanbangchungchi/[idChiTiet]";
 
-const TraCuuVanBangChungChi = (props) => {
-  // const { t } = useTranslation();
+const previewResults = [1, 2].map((number) => ({
+  DuLieu: {
+    _id: `preview-${number}`,
+    hoTen: "Song Song",
+    ngaySinh: "2003-05-24",
+    maSinhVien: "ABC1200",
+    soHieuVanBang: "TS25",
+    soVaoSoBang: "TS25/929",
+    fileVanBang: "/assets/image/vanbangdemo.png",
+    thongTinTrinhDoDaoTao: { ten: "Bachelor's Degree" },
+    thongTinHinhThucDaoTao: { ten: "Full-time" },
+    thongTinNganhDaoTao: { ten: "Information Systems" },
+    chuyenNganh: "Information Systems",
+    chuyenNganhPhu: "Information Systems",
+    quyetDinh: {
+      soQuyetDinh: "923802/SS",
+      ngayBanHanh: "2025-04-24",
+    },
+  },
+}));
+
+const TraCuuVanBangChungChi = () => {
   const { t, locale, changeLocale } = useTranslation();
-  const isMobile = useMediaQuery({ maxWidth: 767 }) === true;
+  const { resolvedTheme, setTheme } = useUi();
 
   const [ds, setds] = useState([]);
   const [loading, setloading] = useState(false);
@@ -32,6 +60,8 @@ const TraCuuVanBangChungChi = (props) => {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [dialogReady, setDialogReady] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
+  const [previewEmpty, setPreviewEmpty] = useState(false);
 
   useEffect(() => {
     setDialogReady(true);
@@ -42,19 +72,37 @@ const TraCuuVanBangChungChi = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    const preview = new URLSearchParams(window.location.search).get("preview");
+    if (process.env.NODE_ENV === "development" && ["results", "detail", "empty"].includes(preview)) {
+      setPreviewMode(true);
+      setPreviewEmpty(preview === "empty");
+      setds(preview === "empty" ? { Error: true } : previewResults);
+      if (preview === "detail") setSelectedRecord(previewResults[0]);
+    }
+  }, []);
+
   const showNotification = (message) => {
     setNotificationMessage(message);
     setNotificationOpen(true);
   };
 
   const traCuu = async (values, resetTurnstile) => {
+    if (previewMode) {
+      setds(previewEmpty ? { Error: true } : previewResults);
+      setSelectedRecord(null);
+      setNotificationOpen(false);
+      return true;
+    }
+
     const { turnstileToken, ...searchValues } = values;
     const filledFields = Object.entries(searchValues).filter(
-      ([key, value]) => key !== "mucDichTraCuuId" && !!value,
+      ([key, value]) =>
+        key !== "mucDichTraCuuId" &&
+        (typeof value === "string" ? value.trim().length > 0 : Boolean(value)),
     ).length;
 
     if (filledFields < 2) {
-      showNotification(t("index.messages.warning_2_fields"));
       return false;
     }
 
@@ -81,10 +129,9 @@ const TraCuuVanBangChungChi = (props) => {
       const arr = data?.data?.data?.result ?? [];
       if (!Array.isArray(arr) || arr.length === 0) {
         setds({ Error: true });
-        showNotification(t("index.table.no_result_msg"));
       } else {
         setds(arr);
-        setSelectedRecord(arr.length === 1 ? arr[0] : null);
+        setSelectedRecord(null);
       }
     } catch (error) {
       const errorCode = error?.response?.data?.code;
@@ -94,32 +141,17 @@ const TraCuuVanBangChungChi = (props) => {
       } else if (errorCode === "error-turnstile-invalid") {
         messageKey = "index.messages.turnstile_invalid";
       } else if (error?.response?.status === 404) {
-        messageKey = "index.table.no_result_msg";
+        setds({ Error: true });
+        return true;
       }
       showNotification(t(messageKey));
-      setds({ Error: true, messageKey });
+      setds([]);
     } finally {
       setloading(false);
       resetTurnstile?.();
     }
 
     return true;
-  };
-
-  const tieuDeKQ = props.tieuDe;
-  const heroBackgroundStyle = {
-    background: `
-      linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.075) 100%),
-      url('/assets/image/bgtracuu.png')
-    `,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    borderRadius: "0px",
-    maxWidth: "none",
-    width: "100%",
-    minHeight: "700px",
-    boxSizing: "border-box",
   };
 
   return (
@@ -157,89 +189,95 @@ const TraCuuVanBangChungChi = (props) => {
           className="vbcc-inter vbcc-lookup-page"
         >
           <Container fullWidth noGutter>
-            <div
-              className="vbcc-hero"
-              style={{
-                ...heroBackgroundStyle,
-                padding: isMobile ? "124px 16px 24px" : "205px 24px 93px 24px",
-              }}
-            >
-              <div
-                className="vbcc-page-language-switch"
-                aria-label="Language"
-              >
-                <button
-                  type="button"
-                  className={locale === "en-US" ? "active" : ""}
-                  onClick={() => changeLocale("en-US")}
-                >
-                  EN
-                </button>
-                <button
-                  type="button"
-                  className={locale === "vi-VN" ? "active" : ""}
-                  onClick={() => changeLocale("vi-VN")}
-                >
-                  VI
-                </button>
-              </div>
-              <div
-                className="vbcc-hero-layout"
-                style={{
-                  maxWidth: isMobile ? "100%" : "1100px",
-                  width: "100%",
-                  margin: "0 auto",
-                }}
-              >
+            <div className="vbcc-page-shell" style={{ "--sidebar-dock-width": "52px" }}>
+              <SidebarDock className="vbcc-dockbar">
+                <SidebarDockBrand className="vbcc-dockbar-brand" />
+                <SidebarDockWordmark className="vbcc-dockbar-wordmark" />
+                <SidebarDockFooter>
+                  <SidebarDockThemeToggle className="vbcc-dockbar-theme" lightLabel="Light theme" darkLabel="Dark theme" />
+                  <SidebarDockSwitcher className="vbcc-dockbar-language" value={locale} onValueChange={(value) => value && changeLocale(value)} aria-label="Language">
+                    <SidebarDockSwitcherItem value="vi-VN" aria-label="Tiếng Việt">VI</SidebarDockSwitcherItem>
+                    <SidebarDockSwitcherItem value="en-US" aria-label="English">EN</SidebarDockSwitcherItem>
+                  </SidebarDockSwitcher>
+                </SidebarDockFooter>
+              </SidebarDock>
+              <div className="vbcc-mobile-dockbar">
                 <img
-                  className="vbcc-hero-logo"
-                  src="/assets/image/textngang.svg"
-                  alt="VinUniversity Diploma Verification Portal"
+                  className="vbcc-mobile-dockbar-logo"
+                  src="/assets/image/logomobile.png"
+                  alt="VinUniversity"
+                  width="127"
+                  height="24"
                 />
-                <div
-                  className="vbcc-hero-heading"
-                  style={{ marginBottom: isMobile ? 12 : 50 }}
-                >
-                  {tieuDeKQ}
-                </div>
-                <div className="vbcc-hero-form" style={{ width: "100%" }}>
-                  <FormTraCuu
-                    onSubmit={traCuu}
-                    onWarning={showNotification}
-                    onReset={() => {
-                      setds([]);
-                      setSelectedRecord(null);
-                    }}
-                  />
+                <div className="vbcc-mobile-dockbar-controls">
+                  <button
+                    type="button"
+                    className="vbcc-mobile-dockbar-theme"
+                    onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                    aria-label={resolvedTheme === "dark" ? "Light theme" : "Dark theme"}
+                  >
+                    {resolvedTheme === "dark" ? (
+                      <IconMoon size={24} aria-hidden="true" />
+                    ) : (
+                      <IconSun size={24} aria-hidden="true" />
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className="vbcc-mobile-dockbar-language"
+                    onClick={() => changeLocale(locale === "en-US" ? "vi-VN" : "en-US")}
+                    aria-label={locale === "en-US" ? "Switch to Vietnamese" : "Switch to English"}
+                  >
+                    {locale === "en-US" ? "EN" : "VI"}
+                  </button>
                 </div>
               </div>
-            </div>
-            {selectedRecord ? (
-              <ChiTietVanBang
-                record={selectedRecord}
-                onBack={() => {
-                  setSelectedRecord(null);
-                  if (ds.length === 1) setds([]);
-                }}
-              />
-            ) : (
-              <TableTraCuuVBCC
-                thongTinTraCuu={ds}
-                onViewDetail={(record) => setSelectedRecord(record)}
-              />
-            )}
-            <div className="vbcc-accreditation-strip">
-              <img
-                src="/assets/image/bgfooter2.png"
-                alt="VinUniversity accreditations and rankings"
-              />
-              <div
-                className="vbcc-mobile-accreditations"
-                role="img"
-                aria-label="VinUniversity accreditations and rankings"
-              >
-                <div className="vbcc-frame vbcc-frame--top" />
-                <div className="vbcc-frame vbcc-frame--bottom" />
+              <div className="vbcc-page-content">
+                <div className={`vbcc-hero vbcc-theme-${resolvedTheme}${(Array.isArray(ds) ? ds.length > 0 : Boolean(ds?.Error)) ? " vbcc-hero--has-results" : ""}${selectedRecord ? " vbcc-hero--detail" : ""}`}>
+                  <div className="vbcc-hero-header">
+                    <Logo layout="horizontal" theme={resolvedTheme === "dark" ? "white" : "color"} tagline="Diploma Verification Portal" className="vbcc-hero-logo" />
+                  </div>
+                  <div className="vbcc-hero-area">
+                    <div className="vbcc-hero-form">
+                      {selectedRecord ? (
+                        <ChiTietVanBang
+                          record={selectedRecord}
+                          onBack={() => setSelectedRecord(null)}
+                        />
+                      ) : (
+                        <FormTraCuu
+                          onSubmit={traCuu}
+                          onWarning={showNotification}
+                          results={ds}
+                          previewMode={previewMode}
+                          onViewDetail={(record) => {
+                            setSelectedRecord(record);
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                          onReset={() => {
+                            setds([]);
+                            setSelectedRecord(null);
+                            setNotificationOpen(false);
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="vbcc-accreditation-strip">
+                  <img
+                    src="/assets/image/bgfooter2.png"
+                    alt="VinUniversity accreditations and rankings"
+                  />
+                  <div
+                    className="vbcc-mobile-accreditations"
+                    role="img"
+                    aria-label="VinUniversity accreditations and rankings"
+                  >
+                    <div className="vbcc-frame vbcc-frame--top" />
+                    <div className="vbcc-frame vbcc-frame--bottom" />
+                  </div>
+                </div>
               </div>
             </div>
           </Container>
@@ -260,121 +298,185 @@ const TraCuuVanBangChungChi = (props) => {
           padding: 0 !important;
         }
 
-        .vbcc-lookup-page .vbcc-hero {
-          position: relative !important;
-          width: 100% !important;
-          height: 720px !important;
-          min-height: 720px !important;
+        .vbcc-lookup-page .vbcc-page-shell {
+          display: flex;
+          width: 100%;
+          min-width: 0;
+        }
+
+        .vbcc-lookup-page .vbcc-page-content {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .vbcc-lookup-page .vbcc-dockbar {
+          width: 52px !important;
           padding: 0 !important;
-          overflow: hidden;
-          background:
-            linear-gradient(
-              270deg,
-              rgba(0, 0, 0, 0.25) 0%,
-              rgba(0, 0, 0, 0.125) 52.96%,
-              rgba(255, 255, 255, 0) 100%
-            ),
-            linear-gradient(
-              180deg,
-              rgba(0, 0, 0, 0.5) 0%,
-              rgba(255, 255, 255, 0.075) 24.59%,
-              rgba(255, 255, 255, 0.075) 85.79%,
-              rgba(0, 0, 0, 0.035) 100%
-            ),
-            url("/assets/image/bgtracuu.png") !important;
-          background-position: center !important;
-          background-repeat: no-repeat !important;
-          background-size: cover !important;
+          color: rgba(255, 255, 255, .6);
+          background: linear-gradient(142.53deg, #134d8b 43.4%, #2e548a 100%) !important;
+          border-radius: 0;
         }
 
-        .vbcc-lookup-page .vbcc-page-language-switch {
+        .vbcc-lookup-page .vbcc-dockbar-brand {
           position: absolute;
-          top: 32px;
-          left: 72px;
-          z-index: 3;
-          display: flex;
-          width: 64px;
-          height: 24px;
-          padding: 0;
-          overflow: hidden;
-          background: #ffffff;
-          border-radius: 22px;
+          top: 18px;
+          left: 6px;
+          width: 40px;
+          height: 40px;
         }
 
-        .vbcc-lookup-page .vbcc-page-language-switch button {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 32px;
-          height: 24px;
-          padding: 4px 8px;
-          color: #2e548a;
-          font-family: "Inter", sans-serif !important;
-          font-size: 12px;
-          font-weight: 500;
-          line-height: 16px;
-          background: transparent;
-          border: 0;
-          border-radius: 22px;
-          cursor: pointer;
+        .vbcc-lookup-page .vbcc-dockbar-brand [data-slot="logo-mark"] {
+          width: 40px;
+          height: 40px;
         }
 
-        .vbcc-lookup-page .vbcc-page-language-switch button.active {
-          color: #ffffff;
-          background: #c83538;
-        }
-
-        .vbcc-lookup-page .vbcc-hero-layout {
+        .vbcc-lookup-page .vbcc-dockbar-wordmark {
           position: absolute;
-          top: 50%;
-          right: 72px;
+          top: calc(50% - 100px);
+          left: 16px;
+          width: 20px;
+          height: 200px;
+          min-height: 200px;
+          flex: none;
+          color: rgba(255, 255, 255, .4);
+        }
+
+        .vbcc-lookup-page .vbcc-dockbar [data-slot="sidebar-dock-footer"] {
+          display: contents;
+        }
+
+        .vbcc-lookup-page .vbcc-dockbar-theme,
+        .vbcc-lookup-page .vbcc-dockbar-language {
+          position: absolute;
+          left: 8px;
+          width: 36px;
+          height: 68px;
+          padding: 4px;
+          gap: 4px;
+          background: rgba(0, 0, 0, .25);
+          border-radius: 999px;
+        }
+
+        .vbcc-lookup-page .vbcc-dockbar-theme {
+          bottom: 100px;
+        }
+
+        .vbcc-lookup-page .vbcc-dockbar-language {
+          bottom: 16px;
+        }
+
+        .vbcc-lookup-page .vbcc-dockbar [data-slot="sidebar-dock-switcher-item"] {
+          width: 28px;
+          height: 28px;
+          padding: 4px;
+          color: rgba(255, 255, 255, .6);
+          font-size: 11px;
+          font-weight: 600;
+          border-radius: 999px;
+        }
+
+        .vbcc-lookup-page .vbcc-dockbar [data-slot="sidebar-dock-switcher-item"][data-state="on"] {
+          color: #fff;
+          background: #134d8b;
+        }
+
+        .vbcc-lookup-page .vbcc-hero {
           display: flex;
           flex-direction: column;
-          align-items: center;
-          width: 650px !important;
-          max-width: 650px !important;
-          margin: 0 !important;
-          gap: 28px;
-          transform: translateY(-50%);
+          box-sizing: border-box;
+          min-height: max(720px, 100svh);
+          background: url("/assets/image/bgtracuu.png") center / cover no-repeat;
+        }
+
+        .vbcc-lookup-page .vbcc-hero-header {
+          display: flex;
+          flex: none;
+          align-items: flex-start;
+          justify-content: space-between;
+          box-sizing: border-box;
+          height: 128px;
+          padding: 32px;
         }
 
         .vbcc-lookup-page .vbcc-hero-logo {
-          display: block;
-          flex: none;
-          width: 244px;
-          height: 50px;
-          object-fit: contain;
+          transform: scale(1.25);
+          transform-origin: left top;
         }
 
-        .vbcc-lookup-page .vbcc-hero-heading {
-          width: 580px;
-          max-width: 100%;
-          margin: 0 !important;
+        .vbcc-lookup-page .vbcc-hero-logo span {
+          color: #111 !important;
         }
 
-        .vbcc-lookup-page .vbcc-hero-heading > div {
-          min-height: 64px !important;
-          gap: 4px !important;
+        .vbcc-lookup-page .vbcc-theme-dark {
+          background-image: linear-gradient(rgba(16, 41, 77, .56), rgba(16, 41, 77, .56)), url("/assets/image/bgtracuu.png");
         }
 
-        .vbcc-lookup-page .vbcc-hero-heading > div > div:first-child {
-          font-family: "Inter", sans-serif !important;
-          font-size: 28px !important;
-          font-weight: 600 !important;
-          line-height: 36px !important;
-          white-space: nowrap;
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-hero-logo span {
+          color: #fff !important;
         }
 
-        .vbcc-lookup-page .vbcc-hero-heading > div > div:last-child {
-          font-family: "Inter", sans-serif !important;
-          font-size: 16px !important;
-          font-weight: 400 !important;
-          line-height: 24px !important;
+        .vbcc-lookup-page .vbcc-hero-area {
+          display: flex;
+          flex: 1;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
+          min-height: 0;
+          padding: 0 24px 24px;
+        }
+
+        .vbcc-lookup-page .vbcc-hero--has-results .vbcc-hero-area {
+          min-height: max-content;
+        }
+
+        .vbcc-lookup-page .vbcc-hero--detail .vbcc-hero-area {
+          align-items: flex-start;
+          padding-top: 0;
+          padding-bottom: 48px;
         }
 
         .vbcc-lookup-page .vbcc-hero-form {
-          width: 650px !important;
-          max-width: 100%;
+          width: 100%;
+          max-width: 960px;
+        }
+
+        .vbcc-lookup-page .vbcc-mobile-dockbar {
+          display: none;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form-card {
+          background: rgba(20, 38, 61, .94) !important;
+          border: 1px solid rgba(255, 255, 255, .15) !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form-heading h1,
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form label {
+          color: #fff !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form-heading p {
+          color: rgba(255, 255, 255, .7) !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form-heading p.vbcc-form-prompt-error {
+          color: #dc2626 !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="input"],
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-field"] {
+          color: #fff !important;
+          background: rgba(255, 255, 255, .08) !important;
+          border-color: rgba(255, 255, 255, .3) !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="input"]::placeholder,
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-field"] [data-placeholder],
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-field"] [data-type="literal"] {
+          color: rgba(255, 255, 255, .65) !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-field"] [role="spinbutton"] {
+          color: #fff !important;
         }
 
         .vbcc-lookup-page .vbcc-accreditation-strip {
@@ -393,74 +495,97 @@ const TraCuuVanBangChungChi = (props) => {
           display: none;
         }
 
-        @media (max-width: 900px) {
-          .vbcc-lookup-page .vbcc-page-language-switch {
-            left: 24px;
-          }
-
-          .vbcc-lookup-page .vbcc-hero-layout {
-            right: 24px;
-            width: min(650px, calc(100% - 48px)) !important;
-          }
-        }
-
         @media (max-width: 767px) {
-          .vbcc-lookup-page .vbcc-hero {
-            height: 920px !important;
-            min-height: 920px !important;
-            padding: 0 !important;
-            overflow: hidden;
-            background-position: 38% center !important;
+          .vbcc-lookup-page .vbcc-page-shell {
+            flex-direction: column;
+            --sidebar-dock-width: 0px !important;
           }
 
-          .vbcc-lookup-page .vbcc-page-language-switch {
-            top: 56px;
-            right: 20px;
-            left: auto;
+          .vbcc-lookup-page [data-slot="sidebar-dock-gap"],
+          .vbcc-lookup-page [data-slot="sidebar-dock"] {
+            display: none !important;
           }
 
-          .vbcc-lookup-page .vbcc-hero-layout {
+          .vbcc-lookup-page .vbcc-mobile-dockbar {
+            display: block;
+            position: relative;
+            z-index: 2;
+            flex: none;
+            width: 100%;
+            height: 44px;
+            background: linear-gradient(142.53deg, #134d8b 43.4%, #2e548a 100%);
+          }
+
+          .vbcc-lookup-page .vbcc-mobile-dockbar-logo {
             position: absolute;
-            top: 126px;
-            right: auto;
-            left: 20px;
-            width: calc(100% - 40px) !important;
-            gap: 16px;
-            transform: none;
+            top: 10px;
+            left: 4px;
+            display: block;
+            width: 127px;
+            height: 24px;
+            object-fit: contain;
+          }
+
+          .vbcc-lookup-page .vbcc-mobile-dockbar-controls {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            display: flex;
+            width: 72px;
+            height: 36px;
+          }
+
+          .vbcc-lookup-page .vbcc-mobile-dockbar-controls button {
+            display: flex;
+            flex: none;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            padding: 4px;
+            color: rgba(255, 255, 255, .7);
+            background: transparent;
+            border: 0;
+            border-radius: 999px;
+            cursor: pointer;
+          }
+
+          .vbcc-lookup-page .vbcc-mobile-dockbar-controls button:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, .12);
+          }
+
+          .vbcc-lookup-page .vbcc-mobile-dockbar-controls button:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: -2px;
+          }
+
+          .vbcc-lookup-page .vbcc-mobile-dockbar-language {
+            font-size: 14px;
+            font-weight: 500;
+          }
+
+          .vbcc-lookup-page .vbcc-hero {
+            min-height: max(776px, calc(100svh - 44px));
+            background-position: center;
+          }
+
+          .vbcc-lookup-page .vbcc-hero-header {
+            height: 76px;
+            padding: 20px 16px;
           }
 
           .vbcc-lookup-page .vbcc-hero-logo {
-            position: absolute;
-            top: -74px;
-            left: 0;
-            width: 156.16px;
-            height: 32px;
+            transform: scale(.9);
           }
 
-          .vbcc-lookup-page .vbcc-hero-heading {
-            width: 100%;
+          .vbcc-lookup-page .vbcc-hero-area {
+            align-items: flex-start;
+            padding: 12px 16px 48px;
           }
 
-          .vbcc-lookup-page .vbcc-hero-heading > div {
-            min-height: 72px !important;
-          }
-
-          .vbcc-lookup-page .vbcc-hero-heading > div > div:first-child {
-            font-family: "Inter", sans-serif !important;
-            font-size: 18px !important;
-            line-height: 28px !important;
-            letter-spacing: -0.5px;
-            white-space: normal;
-          }
-
-          .vbcc-lookup-page .vbcc-hero-heading > div > div:last-child {
-            font-family: "Inter", sans-serif !important;
-            font-size: 14px !important;
-            line-height: 20px !important;
-          }
-
-          .vbcc-lookup-page .vbcc-hero-form {
-            width: 100% !important;
+          .vbcc-lookup-page .vbcc-hero--detail .vbcc-hero-area {
+            padding-top: 24px;
           }
 
           .vbcc-lookup-page .vbcc-accreditation-strip {
@@ -587,51 +712,9 @@ const TraCuuVanBangChungChi = (props) => {
           }
         }
 
-        @media (max-width: 392px) {
-          .vbcc-lookup-page .vbcc-hero-layout {
-            right: 20px;
-            left: 20px;
-          }
-        }
       `}</style>
     </div>
   );
-};
-
-TraCuuVanBangChungChi.propTypes = {
-  secTitleWrapper: PropTypes.object,
-  secText: PropTypes.object,
-  secHeading: PropTypes.object,
-};
-
-TraCuuVanBangChungChi.defaultProps = {
-  secTitleWrapper: {
-    mb: ["100px", "40px"],
-  },
-  secText: {
-    as: "span",
-    display: "block",
-    textAlign: "center",
-    fontSize: "14px",
-    letterSpacing: "0.15em",
-    fontWeight: "700",
-    color: "#ff4362",
-    mb: "12px",
-  },
-  secHeading: {
-    fontStyle: "normal",
-    textAlign: "center",
-    fontSize: "30px",
-    fontWeight: "bold",
-    color: "#202124",
-    letterSpacing: "0.04em",
-    mb: "0",
-    ml: "auto",
-    mr: "auto",
-    lineHeight: "40px",
-    width: "600px",
-    maxWidth: "100%",
-  },
 };
 
 export default TraCuuVanBangChungChi;

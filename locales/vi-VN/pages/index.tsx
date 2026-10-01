@@ -17,6 +17,7 @@ module.exports = {
     book_no: "Số vào sổ",
     example_book_no: "Ví dụ: TS25/{soVaoSo}",
     search_button: "Tra cứu thông tin",
+    reset_button: "Đặt lại",
   },
   table: {
     book_no: "Số vào sổ",
@@ -28,7 +29,10 @@ module.exports = {
     no_info: "Chưa có thông tin văn bằng",
     detail: "Chi tiết",
     no_result_msg: "Không tồn tại thông tin văn bằng!",
+    no_records_title: "Không tìm thấy kết quả",
+    no_records_caption: "Vui lòng kiểm tra thông tin và thử lại.",
     search_result_header: "Kết quả tra cứu",
+    view_detail: "Xem chi tiết",
     result: "Kết quả",
     results: "Kết quả",
     fill_info_prompt: "Vui lòng điền đầy đủ thông tin để tra cứu",

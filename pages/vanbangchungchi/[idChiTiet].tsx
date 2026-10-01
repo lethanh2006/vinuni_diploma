@@ -1,34 +1,13 @@
 // @ts-nocheck
-import { LecxeEmptyNoData } from "@vinuni/ui";
+import { IconCheckCircle, IconDownload, IconGraduationScroll, IconInfoCircle, IconNotebook01, LecxeEmptyNoData } from "@vinuni/ui";
 import moment from "moment";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import "./style.less";
 import { useTranslation } from "components/Utils/useTranslation";
+import "./style.less";
 
-const PDFViewerV2 = dynamic(() => import("../../components/PDFViewerV2"), {
-  ssr: false,
-});
-
-const normalizeLocalizedText = (value) =>
+const normalizeText = (value) =>
   typeof value === "string" ? value.trim().toLocaleLowerCase("vi") : "";
-
-const dynamicHeaderKeys = {
-  "chuyên ngành": "detail.appendix_major",
-  "chuyên ngành đào tạo": "detail.appendix_major",
-  major: "detail.appendix_major",
-  "ngôn ngữ đào tạo": "detail.language_of_instruction",
-  "language of instruction": "detail.language_of_instruction",
-  "dân tộc": "detail.ethnicity",
-  ethnicity: "detail.ethnicity",
-  "số qđtn": "detail.graduation_decision_no",
-  "số quyết định tốt nghiệp": "detail.graduation_decision_no",
-  "graduation decision number": "detail.graduation_decision_no",
-  "ngày qđtn": "detail.graduation_decision_date",
-  "ngày quyết định tốt nghiệp": "detail.graduation_decision_date",
-  "graduation decision date": "detail.graduation_decision_date",
-};
 
 const dynamicValueKeys = {
   "hệ thống thông tin": "detail.value_information_systems",
@@ -44,28 +23,42 @@ const dynamicValueKeys = {
   "full-time": "detail.value_full_time",
 };
 
-const translateDynamicHeader = (value, t) => {
-  const translationKey = dynamicHeaderKeys[normalizeLocalizedText(value)];
+const displayValue = (value, t, fallback = "--") => {
+  if (value === null || value === undefined || value === "") return fallback;
+  if (typeof value === "object") return JSON.stringify(value);
+  const translationKey = dynamicValueKeys[normalizeText(value)];
   return translationKey ? t(translationKey) : value;
 };
+const displayDate = (value) =>
+  value && moment(value).isValid() ? moment(value).format("DD/MM/YYYY") : "--";
 
-const translateDynamicValue = (value, t) => {
-  const translationKey = dynamicValueKeys[normalizeLocalizedText(value)];
-  return translationKey ? t(translationKey) : value;
-};
+const InfoGrid = ({ items }) => (
+  <dl className="vbcc-detail-fields">
+    {items.map(([label, value]) => (
+      <div className="vbcc-detail-field" key={label}>
+        <dt>{label}</dt>
+        <dd>{value}</dd>
+      </div>
+    ))}
+  </dl>
+);
 
-const renderField = (item, t) => {
-  if (item.type === "Date") {
-    return item.value ? moment(item.value).format("DD/MM/YYYY") : "---";
-  }
-  if (item.type === "Number") {
-    return item.value ?? "---";
-  }
-  if (typeof item.value === "object") {
-    return JSON.stringify(item.value);
-  }
-  return translateDynamicValue(item.value, t) || "---";
-};
+const DetailSection = ({ title, Icon, items }) => (
+  <section className="vbcc-detail-section">
+    <h2 className="vbcc-detail-section-title">
+      <Icon size={24} aria-hidden="true" />
+      {title}
+    </h2>
+    <InfoGrid items={items} />
+  </section>
+);
+
+const PrintIcon = () => (
+  <svg className="vbcc-detail-action-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+    <path d="M6 15h12v6H6zM18 12h.01" />
+  </svg>
+);
 
 const ChiTietVanBang = ({ record: item = {}, onBack }) => {
   const { t } = useTranslation();
@@ -73,358 +66,109 @@ const ChiTietVanBang = ({ record: item = {}, onBack }) => {
   const record = item?.DuLieu ? { ...item, ...item.DuLieu } : item;
   const documentUrl = record?.fileVanBang || record?.urlIpfs;
   const dataElements = record?.templateData ?? [];
-  const findDataElement = (...headerNames) => {
-    const normalizedHeaders = headerNames.map(normalizeLocalizedText);
-
-    return dataElements.find((element) =>
-      normalizedHeaders.includes(normalizeLocalizedText(element?.headerName)),
+  const getDataElementValue = (headers, fallback = "--") => {
+    const normalizedHeaders = headers.map(normalizeText);
+    const element = dataElements.find((entry) =>
+      normalizedHeaders.includes(normalizeText(entry?.headerName)),
     );
+    if (!element) return fallback;
+    if (element.type === "Date") return displayDate(element.value);
+    return displayValue(element.value, t, fallback);
   };
-  const getDataElementValue = (headerNames, fallback = "--") => {
-    const element = findDataElement(...headerNames);
-    return element ? renderField(element, t) : fallback;
-  };
-  const specialization =
-    record?.chuyenNganh ??
-    getDataElementValue([
-      "Chuyên ngành",
-      "Chuyên ngành đào tạo",
-      "Specialization",
-    ]);
-  const minorSpecialization =
-    record?.chuyenNganhPhu ??
-    getDataElementValue([
-      "Chuyên ngành phụ",
-      "Minor specialization",
-      "Minor",
-    ]);
 
   useEffect(() => {
-    if (!onBack) {
-      router.replace("/");
-    }
-  }, [onBack]);
+    if (!onBack) router.replace("/");
+  }, [onBack, router]);
+  if (!onBack) return null;
 
-  if (!onBack) {
-    return null;
-  }
+  const trainingLevel = displayValue(
+    record?.thongTinTrinhDoDaoTao?.ten ?? record?.trinhDoDaoTao, t,
+  );
+  const fieldOfStudy = displayValue(
+    record?.thongTinNganhDaoTao?.ten ?? record?.nganhDaoTao, t,
+  );
+  const issueDate = displayDate(record?.quyetDinh?.ngayBanHanh ?? record?.ngayCapVanBang);
+  const diplomaItems = [
+    [t("detail.fullname"), displayValue(record?.hoTen, t)],
+    [t("detail.student_id"), displayValue(record?.maSinhVien, t)],
+    [t("detail.dob"), displayDate(record?.ngaySinh)],
+    [t("detail.education_level"), trainingLevel],
+    [t("detail.education_form"), displayValue(record?.thongTinHinhThucDaoTao?.ten ?? record?.hinhThucDaoTao, t)],
+    [t("detail.major"), fieldOfStudy],
+    [t("detail.specialization"), displayValue(record?.chuyenNganh ?? getDataElementValue(["Chuyên ngành", "Concentration", "Specialization"]), t)],
+    [t("detail.minor_specialization"), displayValue(record?.chuyenNganhPhu ?? getDataElementValue(["Chuyên ngành phụ", "Minor", "Minor specialization"]), t)],
+    [t("detail.diploma_no"), displayValue(record?.soHieuVanBang, t)],
+    [t("detail.book_no"), displayValue(record?.soVaoSoBang, t)],
+    [t("detail.book_no_en"), displayValue(record?.bookEntryNumberFormat, t, "---")],
+  ];
+  const decisionItems = [
+    [t("detail.decision_no"), displayValue(record?.quyetDinh?.soQuyetDinh, t)],
+    [t("detail.issue_date"), issueDate],
+    [t("detail.summary"), displayValue(record?.quyetDinh?.noiDung, t)],
+  ];
+  const supplementaryItems = [
+    [t("detail.appendix_major"), getDataElementValue(["Chuyên ngành đào tạo", "Major"])],
+    [t("detail.language_of_instruction"), getDataElementValue(["Ngôn ngữ đào tạo", "Language of Instruction"])],
+    [t("detail.ethnicity"), getDataElementValue(["Dân tộc", "Ethnicity"])],
+    [t("detail.graduation_decision_no"), getDataElementValue(["Số QĐTN", "Số quyết định tốt nghiệp", "Graduation decision number"])],
+    [t("detail.graduation_decision_date"), getDataElementValue(["Ngày QĐTN", "Ngày quyết định tốt nghiệp", "Graduation decision date"])],
+  ];
 
   return (
-    <div className="vbcc-container">
-      <div className="vbcc-detail-layout">
-        <div className="vbcc-detail-header">
-          <div className="vbcc-detail-header-left">
-            {onBack && (
-              <div className="vbcc-back-group">
-                <button
-                  type="button"
-                  className="vbcc-back-button"
-                  onClick={onBack}
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M15 10H5M5 10L8.5 6.5M5 10L8.5 13.5"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>{t("detail.back")}</span>
-                </button>
-                <svg
-                  className="vbcc-header-divider"
-                  width="1"
-                  height="20"
-                  viewBox="0 0 1 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <line
-                    x1="0.5"
-                    y1="0"
-                    x2="0.500001"
-                    y2="20"
-                    stroke="black"
-                    strokeOpacity="0.25"
-                  />
-                </svg>
-              </div>
-            )}
-            <div className="vbcc-detail-title">
-              <span>{t("detail.title")}</span>
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 32 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M22.667 22L28.0003 27.3333"
-                  stroke="#134D8B"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <circle
-                  cx="14.6667"
-                  cy="14.6667"
-                  r="10.6667"
-                  stroke="#134D8B"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {record?._id && (
-            <div className="vbcc-verified">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <circle
-                  cx="10"
-                  cy="10"
-                  r="8.25"
-                  stroke="#00B42A"
-                  strokeWidth="1.5"
-                />
-                <path
-                  d="M6.5 10L8.75 12.25L13.5 7.5"
-                  stroke="#00B42A"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-
-              <span>{t("detail.verified")}</span>
-            </div>
+    <div className="vbcc-detail-card">
+      <div className="vbcc-detail-toolbar">
+        <button type="button" className="vbcc-detail-title" onClick={onBack} title={t("detail.back")}>
+          {t("detail.page_title")}
+        </button>
+        <div className="vbcc-detail-actions">
+          <button type="button" className="vbcc-detail-toolbar-button vbcc-detail-print" onClick={() => window.print()} aria-label={t("detail.print")}>
+            <PrintIcon /><span className="vbcc-detail-action-label">{t("detail.print")}</span>
+          </button>
+          {documentUrl ? (
+            <a className="vbcc-detail-toolbar-button vbcc-detail-download" href={documentUrl} target="_blank" rel="noopener noreferrer" download aria-label={t("detail.download")}>
+              <IconDownload className="vbcc-detail-action-icon" size={24} aria-hidden="true" /><span className="vbcc-detail-action-label">{t("detail.download")}</span>
+            </a>
+          ) : (
+            <button type="button" className="vbcc-detail-toolbar-button vbcc-detail-download" disabled title={t("detail.no_diploma_file")} aria-label={t("detail.download")}>
+              <IconDownload className="vbcc-detail-action-icon" size={24} aria-hidden="true" /><span className="vbcc-detail-action-label">{t("detail.download")}</span>
+            </button>
           )}
         </div>
-
-        {record?._id ? (
-          <div className="vbcc-detail-content">
-            <div className="vbcc-detail-main-grid">
-              <div className="vbcc-document-card">
-                <div className="vbcc-document-preview">
-                  {documentUrl ? (
-                    <PDFViewerV2
-                      url={documentUrl}
-                      height="100%"
-                      plugins={[]}
-                    />
-                  ) : (
-                    <img
-                      className="vbcc-document-demo"
-                      src="/assets/image/vanbangdemo.png"
-                      alt={t("detail.diploma_copy")}
-                    />
-                  )}
-                </div>
-                <div className="vbcc-document-actions">
-                  <a
-                    className={`vbcc-document-action ${
-                      documentUrl ? "" : "is-disabled"
-                    }`}
-                    href={documentUrl || undefined}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={t("detail.diploma_file")}
-                    aria-disabled={!documentUrl}
-                  >
-                    <img
-                      className="vbcc-pdf-icon"
-                      src="/assets/image/iconpdf.png"
-                      alt=""
-                    />
-                  </a>
-                  <button
-                    className="vbcc-document-action"
-                    type="button"
-                    onClick={() => window.print()}
-                    aria-label={t("detail.print")}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M15 1.25C16.5188 1.25 17.75 2.48122 17.75 4V6.25H19.5C21.2949 6.25 22.75 7.70507 22.75 9.5L22.75 16C22.75 16.9665 21.9665 17.75 21 17.75H17.75V20C17.75 20.9665 16.9665 21.75 16 21.75L8 21.75C7.0335 21.75 6.25 20.9665 6.25 20V17.75H3C2.0335 17.75 1.25 16.9665 1.25 16L1.25 9.5C1.25 7.70507 2.70507 6.25 4.5 6.25H6.25L6.25 4C6.25 2.48122 7.48122 1.25 9 1.25L15 1.25ZM8 15.75C7.86193 15.75 7.75 15.8619 7.75 16V20C7.75 20.1381 7.86193 20.25 8 20.25L16 20.25C16.1381 20.25 16.25 20.1381 16.25 20L16.25 16C16.25 15.8619 16.1381 15.75 16 15.75H8ZM4.5 7.75C3.5335 7.75 2.75 8.5335 2.75 9.5L2.75 16C2.75 16.1381 2.86193 16.25 3 16.25H6.25V16C6.25 15.0335 7.0335 14.25 8 14.25H16C16.9665 14.25 17.75 15.0335 17.75 16V16.25L21 16.25C21.1381 16.25 21.25 16.1381 21.25 16L21.25 9.5C21.25 8.5335 20.4665 7.75 19.5 7.75L4.5 7.75ZM19.0088 10C19.5611 10 20.0088 10.4477 20.0088 11C20.0088 11.5523 19.5611 12 19.0088 12H19C18.4477 12 18 11.5523 18 11C18 10.4477 18.4477 10 19 10H19.0088ZM9 2.75C8.30964 2.75 7.75 3.30964 7.75 4L7.75 6.25L16.25 6.25V4C16.25 3.30964 15.6904 2.75 15 2.75L9 2.75Z"
-                        fill="black"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <div className="vbcc-info-stack">
-                <div className="vbcc-info-card">
-                  <div className="vbcc-info-title">
-                    {t("detail.diploma_info")}
-                  </div>
-                  <InfoGrid
-                    items={[
-                      [t("detail.fullname"), record?.hoTen ?? "--"],
-                      [t("detail.student_id"), record?.maSinhVien ?? "--"],
-                      [
-                        t("detail.dob"),
-                        record?.ngaySinh
-                          ? moment(record.ngaySinh).format("DD/MM/YYYY")
-                          : "--",
-                      ],
-                      [
-                        t("detail.education_level"),
-                        translateDynamicValue(
-                          record?.thongTinTrinhDoDaoTao?.ten ??
-                            record?.trinhDoDaoTao,
-                          t,
-                        ) ?? "--",
-                      ],
-                      [
-                        t("detail.education_form"),
-                        translateDynamicValue(
-                          record?.thongTinHinhThucDaoTao?.ten ??
-                            record?.hinhThucDaoTao,
-                          t,
-                        ) ?? "--",
-                      ],
-                      [
-                        t("detail.major"),
-                        translateDynamicValue(
-                          record?.thongTinNganhDaoTao?.ten ??
-                            record?.nganhDaoTao,
-                          t,
-                        ) ?? "--",
-                      ],
-                      [t("detail.specialization"), specialization],
-                      [t("detail.minor_specialization"), minorSpecialization],
-                      [t("detail.diploma_no"), record?.soHieuVanBang ?? "--"],
-                      [t("detail.book_no"), record?.soVaoSoBang ?? "--"],
-                      [
-                        t("detail.book_no_en"),
-                        record?.bookEntryNumberFormat ?? "---",
-                      ],
-                    ]}
-                  />
-                </div>
-
-                <div className="vbcc-info-card">
-                  <div className="vbcc-info-title">
-                    {t("detail.decision_info")}
-                  </div>
-                  <InfoGrid
-                    wideLast
-                    items={[
-                      [
-                        t("detail.decision_no"),
-                        record?.quyetDinh?.soQuyetDinh ?? "--",
-                      ],
-                      [
-                        t("detail.issue_date"),
-                        record?.quyetDinh?.ngayBanHanh
-                          ? moment(record.quyetDinh.ngayBanHanh).format(
-                              "DD/MM/YYYY",
-                            )
-                          : "--",
-                      ],
-                      [t("detail.summary"), record?.quyetDinh?.noiDung ?? "--"],
-                    ]}
-                  />
-                </div>
-
-                <div className="vbcc-info-card">
-                  <div className="vbcc-info-title">
-                    {t("detail.appendix_info")}
-                  </div>
-                  <InfoGrid
-                    items={[
-                      [
-                        t("detail.appendix_major"),
-                        getDataElementValue([
-                          "Chuyên ngành đào tạo",
-                          "Major",
-                        ]),
-                      ],
-                      [
-                        t("detail.language_of_instruction"),
-                        getDataElementValue([
-                          "Ngôn ngữ đào tạo",
-                          "Language of Instruction",
-                        ]),
-                      ],
-                      [
-                        t("detail.ethnicity"),
-                        getDataElementValue(["Dân tộc", "Ethnicity"]),
-                      ],
-                      [
-                        t("detail.graduation_decision_no"),
-                        getDataElementValue([
-                          "Số QĐTN",
-                          "Số quyết định tốt nghiệp",
-                          "Graduation decision number",
-                        ]),
-                      ],
-                      [
-                        t("detail.graduation_decision_date"),
-                        getDataElementValue([
-                          "Ngày QĐTN",
-                          "Ngày quyết định tốt nghiệp",
-                          "Graduation decision date",
-                        ]),
-                      ],
-                    ]}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="vbcc-empty">
-            <LecxeEmptyNoData />
-            <p>{t("detail.no_appendix_error")}</p>
-          </div>
-        )}
       </div>
+
+      {record?._id ? (
+        <div className="vbcc-detail-body">
+          <section className="vbcc-detail-student">
+            <div className="vbcc-detail-student-primary">
+              <div className="vbcc-detail-student-heading">
+                <h1>{displayValue(record?.hoTen, t)}</h1>
+                <span className="vbcc-detail-verified"><IconCheckCircle size={20} aria-hidden="true" />{t("detail.verified")}</span>
+              </div>
+              <InfoGrid items={[
+                [t("detail.student_id"), displayValue(record?.maSinhVien, t)],
+                [t("detail.dob"), displayDate(record?.ngaySinh)],
+              ]} />
+            </div>
+            <div className="vbcc-detail-student-summary">
+              <InfoGrid items={[
+                [t("detail.education_level"), trainingLevel],
+                [t("detail.major"), fieldOfStudy],
+                [t("detail.issue_date"), issueDate],
+              ]} />
+            </div>
+          </section>
+
+          <div className="vbcc-detail-information">
+            <DetailSection title={t("detail.diploma_info")} Icon={IconInfoCircle} items={diplomaItems} />
+            <DetailSection title={t("detail.decision_info")} Icon={IconGraduationScroll} items={decisionItems} />
+            <DetailSection title={t("detail.appendix_info")} Icon={IconNotebook01} items={supplementaryItems} />
+          </div>
+        </div>
+      ) : (
+        <div className="vbcc-detail-empty"><LecxeEmptyNoData /><p>{t("detail.no_appendix_error")}</p></div>
+      )}
     </div>
   );
 };
-
-const InfoGrid = ({ items, wideLast = false }) => (
-  <dl className="vbcc-info-grid">
-    {items.map(([label, value], index) => (
-      <div
-        className={
-          wideLast && index === items.length - 1
-            ? "vbcc-info-item is-wide"
-            : "vbcc-info-item"
-        }
-        key={`${label}-${index}`}
-      >
-        <dt>{label}</dt>
-        <dd>{value}</dd>
-      </div>
-    ))}
-  </dl>
-);
 
 export default ChiTietVanBang;

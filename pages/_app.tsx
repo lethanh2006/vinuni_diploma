@@ -29,7 +29,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <LanguageProvider>
-      <UiProvider>
+      <UiProvider defaultTheme="light">
         <TooltipProvider>
           <Layout>
             <Modal />

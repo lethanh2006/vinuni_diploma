@@ -2,6 +2,7 @@
 module.exports = {
   // title: "Chi tiết kết quả tra cứu",
   title: "Kết quả tra cứu",
+  page_title: "Chi tiết",
   verified: "Thông tin đã được xác thực",
   diploma_info: "Thông tin văn bằng",
   fullname: "Họ và tên",
@@ -35,7 +36,8 @@ module.exports = {
   diploma_copy: "Bản sao văn bằng",
   no_diploma_file: "Chưa có tệp văn bằng",
   ipfs_file: "Tệp tin IPFS",
-  print: "In văn bằng",
+  print: "In",
+  download: "Tải xuống",
   signed_info: "Thông tin văn bằng đã được ký số:",
   check_signature: "Kiểm tra chữ ký số (JWS)",
   no_appendix_error: "Không tìm thấy thông tin phụ lục",
