@@ -32,18 +32,14 @@
   align-items: center;
   min-width: 0;
   height: 44px;
+  margin: 0;
   padding: 6px 0;
   color: #000;
   font: 600 24px/32px "Inter", sans-serif;
   text-align: left;
   background: transparent;
   border: 0;
-  cursor: pointer;
-}
-
-.vbcc-detail-title:focus-visible {
-  outline: 2px solid #134d8b;
-  outline-offset: 2px;
+  cursor: default;
 }
 
 .vbcc-detail-actions {
@@ -220,8 +216,11 @@
 .vbcc-detail-field dd {
   margin: 0;
   overflow-wrap: anywhere;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-weight: 400;
+  font-variant-numeric: proportional-nums;
+  font-feature-settings: "tnum" 0;
   line-height: 24px;
 }
 
@@ -283,7 +282,6 @@
   color: var(--vbcc-dark-text, #f6f7f9);
 }
 
-.vbcc-theme-dark .vbcc-detail-title:focus-visible,
 .vbcc-theme-dark .vbcc-detail-toolbar-button:focus-visible {
   outline: 2px solid var(--vbcc-dark-focus, #8cbcff);
   outline-offset: 2px;

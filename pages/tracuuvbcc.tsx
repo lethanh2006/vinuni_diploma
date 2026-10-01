@@ -19,12 +19,14 @@ import {
   useUi,
 } from "@vinuni/ui";
 import axios from "axios";
+import { useRouter } from "next/router";
 import FormTraCuu from "components/Table/FormTraCuuVBCC";
+import { clearLookupRecords, getDetailHash, getDetailId, getRecordId, readLookupRecords, saveLookupRecords } from "components/VanBangChungChi/detailNavigation";
 import Container from "components/UI/Container";
 import { ip } from "data/ip";
 // import { ipProxy } from "data/ip";
 import "rc-tabs/assets/index.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SectionWrapper from "../styles/vanbangchungchi.style";
 import { useTranslation } from "components/Utils/useTranslation";
 import ChiTietVanBang from "./vanbangchungchi/[idChiTiet]";
@@ -53,15 +55,20 @@ const previewResults = [1, 2].map((number) => ({
 const TraCuuVanBangChungChi = () => {
   const { t, locale, changeLocale } = useTranslation();
   const { resolvedTheme, setTheme } = useUi();
+  const router = useRouter();
+  const initialized = useRef(false);
 
   const [ds, setds] = useState([]);
   const [loading, setloading] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState(null);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState("");
   const [dialogReady, setDialogReady] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [previewEmpty, setPreviewEmpty] = useState(false);
+  const detailId = router.isReady ? getDetailId(router.asPath) : "";
+  const selectedRecord = Array.isArray(ds)
+    ? ds.find((record) => detailId && getRecordId(record) === detailId)
+    : null;
 
   useEffect(() => {
     setDialogReady(true);
@@ -73,14 +80,28 @@ const TraCuuVanBangChungChi = () => {
   }, []);
 
   useEffect(() => {
-    const preview = new URLSearchParams(window.location.search).get("preview");
+    if (!router.isReady || initialized.current) return;
+    initialized.current = true;
+    const preview = router.query.preview;
     if (process.env.NODE_ENV === "development" && ["results", "detail", "empty"].includes(preview)) {
       setPreviewMode(true);
       setPreviewEmpty(preview === "empty");
       setds(preview === "empty" ? { Error: true } : previewResults);
-      if (preview === "detail") setSelectedRecord(previewResults[0]);
+      if (preview === "detail" && !getDetailId(router.asPath)) {
+        router.replace(`${router.asPath.split("#")[0]}${getDetailHash(getRecordId(previewResults[0]))}`, undefined, { shallow: true, scroll: false });
+      }
+    } else {
+      setds(readLookupRecords());
     }
-  }, []);
+  }, [router.isReady, router]);
+
+  const viewDetail = async (record) => {
+    const id = getRecordId(record);
+    if (!id || id === detailId) return;
+    if (!previewMode) saveLookupRecords(ds);
+    await router.push(`${router.asPath.split("#")[0]}${getDetailHash(id)}`, undefined, { shallow: true, scroll: false });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const showNotification = (message) => {
     setNotificationMessage(message);
@@ -90,7 +111,6 @@ const TraCuuVanBangChungChi = () => {
   const traCuu = async (values, resetTurnstile) => {
     if (previewMode) {
       setds(previewEmpty ? { Error: true } : previewResults);
-      setSelectedRecord(null);
       setNotificationOpen(false);
       return true;
     }
@@ -112,7 +132,8 @@ const TraCuuVanBangChungChi = () => {
     }
 
     setloading(true);
-    setSelectedRecord(null);
+    setds([]);
+    clearLookupRecords();
     setNotificationOpen(false);
     try {
       const data = await axios.post(
@@ -131,7 +152,7 @@ const TraCuuVanBangChungChi = () => {
         setds({ Error: true });
       } else {
         setds(arr);
-        setSelectedRecord(null);
+        saveLookupRecords(arr);
       }
     } catch (error) {
       const errorCode = error?.response?.data?.code;
@@ -234,32 +255,31 @@ const TraCuuVanBangChungChi = () => {
               </div>
               <div className="vbcc-page-content">
                 <div className={`vbcc-hero vbcc-theme-${resolvedTheme}${(Array.isArray(ds) ? ds.length > 0 : Boolean(ds?.Error)) ? " vbcc-hero--has-results" : ""}${selectedRecord ? " vbcc-hero--detail" : ""}`}>
+                  <div className="vbcc-hero-background" aria-hidden="true" />
                   <div className="vbcc-hero-header">
                     <Logo layout="horizontal" theme="color" tagline="Diploma Verification Portal" className="vbcc-hero-logo" />
                   </div>
                   <div className="vbcc-hero-area">
                     <div className="vbcc-hero-form">
                       {selectedRecord ? (
-                        <ChiTietVanBang
-                          record={selectedRecord}
-                          onBack={() => setSelectedRecord(null)}
-                        />
+                        <ChiTietVanBang record={selectedRecord} />
                       ) : (
-                        <FormTraCuu
-                          onSubmit={traCuu}
-                          onWarning={showNotification}
-                          results={ds}
-                          previewMode={previewMode}
-                          onViewDetail={(record) => {
-                            setSelectedRecord(record);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                          onReset={() => {
-                            setds([]);
-                            setSelectedRecord(null);
-                            setNotificationOpen(false);
-                          }}
-                        />
+                        <>
+                          {detailId ? <p className="vbcc-detail-link-message" role="status">{t("detail.linked_record_lookup")}</p> : null}
+                          <FormTraCuu
+                            onSubmit={traCuu}
+                            onWarning={showNotification}
+                            results={ds}
+                            previewMode={previewMode}
+                            onViewDetail={viewDetail}
+                            onReset={() => {
+                              setds([]);
+                              clearLookupRecords();
+                              if (detailId) router.replace(router.asPath.split("#")[0], undefined, { shallow: true, scroll: false });
+                              setNotificationOpen(false);
+                            }}
+                          />
+                        </>
                       )}
                     </div>
                   </div>
@@ -391,11 +411,33 @@ const TraCuuVanBangChungChi = () => {
         }
 
         .vbcc-lookup-page .vbcc-hero {
+          position: relative;
+          isolation: isolate;
           display: flex;
           flex-direction: column;
           box-sizing: border-box;
           min-height: max(720px, 100svh);
+        }
+
+        .vbcc-lookup-page .vbcc-hero-background {
+          position: sticky;
+          top: 0;
+          z-index: -1;
+          flex: none;
+          width: 100%;
+          height: 100svh;
+          margin-bottom: -100svh;
           background: url("/assets/image/bgtracuu.png") center / cover no-repeat;
+          pointer-events: none;
+        }
+
+        .vbcc-lookup-page .vbcc-detail-link-message {
+          margin: 0 0 12px;
+          padding: 12px 16px;
+          color: #134d8b;
+          font-size: 14px;
+          background: #fff;
+          border-radius: 8px;
         }
 
         .vbcc-lookup-page .vbcc-hero-header {
@@ -613,7 +655,6 @@ const TraCuuVanBangChungChi = () => {
 
           .vbcc-lookup-page .vbcc-hero {
             min-height: max(776px, calc(100svh - 44px));
-            background-position: center;
           }
 
           .vbcc-lookup-page .vbcc-hero-header {
@@ -765,6 +806,11 @@ const TraCuuVanBangChungChi = () => {
           }
         }
 
+        @media print {
+          .vbcc-lookup-page .vbcc-hero-background {
+            display: none;
+          }
+        }
       `}</style>
     </div>
   );

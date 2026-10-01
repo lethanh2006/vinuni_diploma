@@ -38,10 +38,11 @@ module.exports = {
   ipfs_file: "IPFS File",
   print: "Print",
   download: "Download",
-  downloading: "Creating PDF...",
-  download_failed: "Could not create the PDF. Please try again.",
+  downloading: "Downloading...",
+  download_failed: "Could not download the diploma file. Please try again.",
   signed_info: "Diploma information has been digitally signed:",
   check_signature: "Verify digital signature (JWS)",
   no_appendix_error: "Supplementary information not found",
+  linked_record_lookup: "Please search to view the diploma linked from this URL.",
   back: "Back"
 };
