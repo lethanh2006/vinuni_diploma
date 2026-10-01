@@ -3,21 +3,13 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { themeGet } from 'styled-system';
 
 export const GlobalStyle = createGlobalStyle`
+  html,
   body,
-  button,
-  input,
-  select,
-  textarea {
-    font-family: 'Montserrat', sans-serif !important;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: 'Montserrat', sans-serif;
+  body *:not(.anticon):not([class^='flaticon-']):not([class*=' flaticon-']) {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif !important;
+    /* Ant Design's tabular numerals add a foot to Inter's digit 1. */
+    font-variant-numeric: lining-nums proportional-nums !important;
+    font-feature-settings: 'lnum' 1, 'pnum' 1, 'tnum' 0 !important;
   }
 
   section {

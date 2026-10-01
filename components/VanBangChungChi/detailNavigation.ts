@@ -7,7 +7,7 @@ export type LookupRecord = {
   [key: string]: unknown;
 };
 
-const DETAIL_HASH_PREFIX = "#/vanbangchungchi/";
+const DETAIL_PATH_PREFIX = "/vanbangchungchi/";
 const LOOKUP_STORAGE_KEY = "vinuni.vbcc.lookup-records";
 
 export const getRecordId = (record: LookupRecord | null | undefined): string => {
@@ -15,17 +15,17 @@ export const getRecordId = (record: LookupRecord | null | undefined): string => 
   return typeof id === "string" || typeof id === "number" ? String(id) : "";
 };
 
-export const getDetailHash = (id: string): string =>
-  `${DETAIL_HASH_PREFIX}${encodeURIComponent(id)}`;
+export const getDetailPath = (id: string): string =>
+  `${DETAIL_PATH_PREFIX}${encodeURIComponent(id)}`;
 
 export const getDetailId = (asPath: string): string => {
-  const hashStart = asPath.indexOf("#");
-  if (hashStart < 0) return "";
-  const hash = asPath.slice(hashStart);
-  if (!hash.startsWith(DETAIL_HASH_PREFIX)) return "";
+  const [path, hash] = asPath.split("#");
+  const pathname = hash?.startsWith(DETAIL_PATH_PREFIX) ? hash : path;
+  const match = pathname.split("?")[0].match(/^\/vanbangchungchi\/([^/]+)\/?$/);
+  if (!match) return "";
 
   try {
-    return decodeURIComponent(hash.slice(DETAIL_HASH_PREFIX.length));
+    return decodeURIComponent(match[1]);
   } catch {
     return "";
   }

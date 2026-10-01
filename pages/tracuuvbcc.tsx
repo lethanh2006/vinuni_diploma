@@ -21,7 +21,8 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import FormTraCuu from "components/Table/FormTraCuuVBCC";
-import { clearLookupRecords, getDetailHash, getDetailId, getRecordId, readLookupRecords, saveLookupRecords } from "components/VanBangChungChi/detailNavigation";
+import { clearLookupRecords, getDetailPath, getDetailId, getRecordId, readLookupRecords, saveLookupRecords } from "components/VanBangChungChi/detailNavigation";
+import ChiTietVanBang from "components/VanBangChungChi/ChiTietVanBang";
 import Container from "components/UI/Container";
 import { ip } from "data/ip";
 // import { ipProxy } from "data/ip";
@@ -29,7 +30,6 @@ import "rc-tabs/assets/index.css";
 import React, { useEffect, useRef, useState } from "react";
 import SectionWrapper from "../styles/vanbangchungchi.style";
 import { useTranslation } from "components/Utils/useTranslation";
-import ChiTietVanBang from "./vanbangchungchi/[idChiTiet]";
 
 const previewResults = [1, 2].map((number) => ({
   DuLieu: {
@@ -65,7 +65,9 @@ const TraCuuVanBangChungChi = () => {
   const [dialogReady, setDialogReady] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [previewEmpty, setPreviewEmpty] = useState(false);
-  const [detailId, setDetailId] = useState("");
+  const detailId = router.isReady ? getDetailId(router.asPath) : "";
+  const queryString = router.asPath.split("#")[0].split("?")[1];
+  const querySuffix = queryString ? `?${queryString}` : "";
   const selectedRecord = Array.isArray(ds)
     ? ds.find((record) => detailId && getRecordId(record) === detailId)
     : null;
@@ -81,11 +83,10 @@ const TraCuuVanBangChungChi = () => {
 
   useEffect(() => {
     if (!router.isReady) return;
-    const syncDetailId = () => setDetailId(getDetailId(window.location.href));
-    syncDetailId();
-    window.addEventListener("hashchange", syncDetailId);
-    return () => window.removeEventListener("hashchange", syncDetailId);
-  }, [router.isReady, router.asPath]);
+    if (detailId && router.asPath.includes("#/vanbangchungchi/")) {
+      router.replace(`${getDetailPath(detailId)}${querySuffix}`, undefined, { scroll: false });
+    }
+  }, [router.isReady, router.asPath, detailId, querySuffix, router]);
 
   useEffect(() => {
     if (!router.isReady || initialized.current) return;
@@ -96,7 +97,7 @@ const TraCuuVanBangChungChi = () => {
       setPreviewEmpty(preview === "empty");
       setds(preview === "empty" ? { Error: true } : previewResults);
       if (preview === "detail" && !getDetailId(router.asPath)) {
-        router.replace(`${router.asPath.split("#")[0]}${getDetailHash(getRecordId(previewResults[0]))}`, undefined, { shallow: true, scroll: false });
+        router.replace(`${getDetailPath(getRecordId(previewResults[0]))}${querySuffix}`, undefined, { scroll: false });
       }
     } else {
       setds(readLookupRecords());
@@ -107,7 +108,7 @@ const TraCuuVanBangChungChi = () => {
     const id = getRecordId(record);
     if (!id || id === detailId) return;
     if (!previewMode) saveLookupRecords(ds);
-    await router.push(`${router.asPath.split("#")[0]}${getDetailHash(id)}`, undefined, { shallow: true, scroll: false });
+    await router.push(`${getDetailPath(id)}${querySuffix}`, undefined, { scroll: false });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -283,7 +284,7 @@ const TraCuuVanBangChungChi = () => {
                             onReset={() => {
                               setds([]);
                               clearLookupRecords();
-                              if (detailId) router.replace(router.asPath.split("#")[0], undefined, { shallow: true, scroll: false });
+                              if (detailId) router.replace(`/${querySuffix}`, undefined, { scroll: false });
                               setNotificationOpen(false);
                             }}
                           />
