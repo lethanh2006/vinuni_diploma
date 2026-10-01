@@ -65,7 +65,7 @@ const TraCuuVanBangChungChi = () => {
   const [dialogReady, setDialogReady] = useState(false);
   const [previewMode, setPreviewMode] = useState(false);
   const [previewEmpty, setPreviewEmpty] = useState(false);
-  const detailId = router.isReady ? getDetailId(router.asPath) : "";
+  const [detailId, setDetailId] = useState("");
   const selectedRecord = Array.isArray(ds)
     ? ds.find((record) => detailId && getRecordId(record) === detailId)
     : null;
@@ -78,6 +78,14 @@ const TraCuuVanBangChungChi = () => {
       document.body.classList.remove("vbcc-lookup-active");
     };
   }, []);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const syncDetailId = () => setDetailId(getDetailId(window.location.href));
+    syncDetailId();
+    window.addEventListener("hashchange", syncDetailId);
+    return () => window.removeEventListener("hashchange", syncDetailId);
+  }, [router.isReady, router.asPath]);
 
   useEffect(() => {
     if (!router.isReady || initialized.current) return;
@@ -413,6 +421,7 @@ const TraCuuVanBangChungChi = () => {
         .vbcc-lookup-page .vbcc-hero {
           position: relative;
           isolation: isolate;
+          clip-path: inset(0);
           display: flex;
           flex-direction: column;
           box-sizing: border-box;
@@ -420,13 +429,12 @@ const TraCuuVanBangChungChi = () => {
         }
 
         .vbcc-lookup-page .vbcc-hero-background {
-          position: sticky;
+          position: fixed;
           top: 0;
+          right: 0;
+          left: 52px;
           z-index: -1;
-          flex: none;
-          width: 100%;
           height: 100svh;
-          margin-bottom: -100svh;
           background: url("/assets/image/bgtracuu.png") center / cover no-repeat;
           pointer-events: none;
         }
@@ -655,6 +663,10 @@ const TraCuuVanBangChungChi = () => {
 
           .vbcc-lookup-page .vbcc-hero {
             min-height: max(776px, calc(100svh - 44px));
+          }
+
+          .vbcc-lookup-page .vbcc-hero-background {
+            left: 0;
           }
 
           .vbcc-lookup-page .vbcc-hero-header {
