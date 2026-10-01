@@ -2,8 +2,9 @@
 import { IconCheckCircle, IconDownload, IconGraduationScroll, IconInfoCircle, IconNotebook01, LecxeEmptyNoData } from "@vinuni/ui";
 import moment from "moment";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "components/Utils/useTranslation";
+import { downloadDetailPdf } from "components/Utils/downloadDetailPdf";
 import "./style.less";
 
 const normalizeText = (value) =>
@@ -63,6 +64,9 @@ const PrintIcon = () => (
 const ChiTietVanBang = ({ record: item = {}, onBack }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const cardRef = useRef(null);
+  const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState(false);
   const record = item?.DuLieu ? { ...item, ...item.DuLieu } : item;
   const documentUrl = record?.fileVanBang || record?.urlIpfs;
   const dataElements = record?.templateData ?? [];
@@ -80,6 +84,20 @@ const ChiTietVanBang = ({ record: item = {}, onBack }) => {
     if (!onBack) router.replace("/");
   }, [onBack, router]);
   if (!onBack) return null;
+
+  const handleDownload = async () => {
+    if (downloading || !cardRef.current) return;
+    setDownloading(true);
+    setDownloadError(false);
+    try {
+      await downloadDetailPdf({ card: cardRef.current, record, documentUrl });
+    } catch (error) {
+      console.error("Could not download diploma PDF", error);
+      setDownloadError(true);
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   const trainingLevel = displayValue(
     record?.thongTinTrinhDoDaoTao?.ten ?? record?.trinhDoDaoTao, t,
@@ -115,7 +133,7 @@ const ChiTietVanBang = ({ record: item = {}, onBack }) => {
   ];
 
   return (
-    <div className="vbcc-detail-card">
+    <div className="vbcc-detail-card" ref={cardRef}>
       <div className="vbcc-detail-toolbar">
         <button type="button" className="vbcc-detail-title" onClick={onBack} title={t("detail.back")}>
           {t("detail.page_title")}
@@ -124,17 +142,12 @@ const ChiTietVanBang = ({ record: item = {}, onBack }) => {
           <button type="button" className="vbcc-detail-toolbar-button vbcc-detail-print" onClick={() => window.print()} aria-label={t("detail.print")}>
             <PrintIcon /><span className="vbcc-detail-action-label">{t("detail.print")}</span>
           </button>
-          {documentUrl ? (
-            <a className="vbcc-detail-toolbar-button vbcc-detail-download" href={documentUrl} target="_blank" rel="noopener noreferrer" download aria-label={t("detail.download")}>
-              <IconDownload className="vbcc-detail-action-icon" size={24} aria-hidden="true" /><span className="vbcc-detail-action-label">{t("detail.download")}</span>
-            </a>
-          ) : (
-            <button type="button" className="vbcc-detail-toolbar-button vbcc-detail-download" disabled title={t("detail.no_diploma_file")} aria-label={t("detail.download")}>
-              <IconDownload className="vbcc-detail-action-icon" size={24} aria-hidden="true" /><span className="vbcc-detail-action-label">{t("detail.download")}</span>
-            </button>
-          )}
+          <button type="button" className="vbcc-detail-toolbar-button vbcc-detail-download" onClick={handleDownload} disabled={downloading || !record?._id} aria-busy={downloading} aria-label={downloading ? t("detail.downloading") : t("detail.download")}>
+            <IconDownload className="vbcc-detail-action-icon" size={24} aria-hidden="true" /><span className="vbcc-detail-action-label">{downloading ? t("detail.downloading") : t("detail.download")}</span>
+          </button>
         </div>
       </div>
+      {downloadError ? <p className="vbcc-detail-download-error" role="alert">{t("detail.download_failed")}</p> : null}
 
       {record?._id ? (
         <div className="vbcc-detail-body">

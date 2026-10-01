@@ -38,6 +38,8 @@ module.exports = {
   ipfs_file: "Tệp tin IPFS",
   print: "In",
   download: "Tải xuống",
+  downloading: "Đang tạo PDF...",
+  download_failed: "Không thể tạo tệp PDF. Vui lòng thử lại.",
   signed_info: "Thông tin văn bằng đã được ký số:",
   check_signature: "Kiểm tra chữ ký số (JWS)",
   no_appendix_error: "Không tìm thấy thông tin phụ lục",

@@ -238,22 +238,22 @@ const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
           font-weight: 500;
         }
         :global(.vbcc-theme-dark) .vbcc-results-empty-state {
-          border-top-color: rgba(255, 255, 255, .2);
+          border-top-color: var(--vbcc-dark-border);
         }
         :global(.vbcc-theme-dark) .vbcc-empty-copy h2 {
-          color: #fff;
+          color: var(--vbcc-dark-text);
         }
         :global(.vbcc-theme-dark) .vbcc-empty-copy p {
-          color: rgba(255, 255, 255, .7);
+          color: var(--vbcc-dark-muted);
         }
         :global(.vbcc-theme-dark) .vbcc-results {
-          --result-text: #fff;
-          --result-muted: rgba(255, 255, 255, .7);
-          --result-tile: rgba(255, 255, 255, .08);
-          border-top-color: rgba(255, 255, 255, .2);
+          --result-text: var(--vbcc-dark-text);
+          --result-muted: var(--vbcc-dark-muted);
+          --result-tile: var(--vbcc-dark-control);
+          border-top-color: var(--vbcc-dark-border);
         }
         :global(.vbcc-theme-dark) :global(.vbcc-results-detail) {
-          color: #8cbcff !important;
+          color: var(--vbcc-dark-focus) !important;
         }
         @media (max-width: 767px) {
           .vbcc-results-header { padding: 16px 20px; }

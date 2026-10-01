@@ -235,7 +235,7 @@ const TraCuuVanBangChungChi = () => {
               <div className="vbcc-page-content">
                 <div className={`vbcc-hero vbcc-theme-${resolvedTheme}${(Array.isArray(ds) ? ds.length > 0 : Boolean(ds?.Error)) ? " vbcc-hero--has-results" : ""}${selectedRecord ? " vbcc-hero--detail" : ""}`}>
                   <div className="vbcc-hero-header">
-                    <Logo layout="horizontal" theme={resolvedTheme === "dark" ? "white" : "color"} tagline="Diploma Verification Portal" className="vbcc-hero-logo" />
+                    <Logo layout="horizontal" theme="color" tagline="Diploma Verification Portal" className="vbcc-hero-logo" />
                   </div>
                   <div className="vbcc-hero-area">
                     <div className="vbcc-hero-form">
@@ -274,8 +274,18 @@ const TraCuuVanBangChungChi = () => {
                     role="img"
                     aria-label="VinUniversity accreditations and rankings"
                   >
-                    <div className="vbcc-frame vbcc-frame--top" />
-                    <div className="vbcc-frame vbcc-frame--bottom" />
+                    <svg className="vbcc-accreditation-logo vbcc-accreditation-logo--work" viewBox="490 70 195 300" aria-hidden="true">
+                      <image href="/assets/image/bgfooter2.png" width="2517" height="401" />
+                    </svg>
+                    <svg className="vbcc-accreditation-logo vbcc-accreditation-logo--fibaa" viewBox="780 70 235 300" aria-hidden="true">
+                      <image href="/assets/image/bgfooter2.png" width="2517" height="401" />
+                    </svg>
+                    <svg className="vbcc-accreditation-logo vbcc-accreditation-logo--qs" viewBox="1140 75 250 260" aria-hidden="true">
+                      <image href="/assets/image/bgfooter2.png" width="2517" height="401" />
+                    </svg>
+                    <svg className="vbcc-accreditation-logo vbcc-accreditation-logo--stars" viewBox="1530 80 680 240" aria-hidden="true">
+                      <image href="/assets/image/bgfooter2.png" width="2517" height="401" />
+                    </svg>
                   </div>
                 </div>
               </div>
@@ -408,11 +418,15 @@ const TraCuuVanBangChungChi = () => {
         }
 
         .vbcc-lookup-page .vbcc-theme-dark {
-          background-image: linear-gradient(rgba(16, 41, 77, .56), rgba(16, 41, 77, .56)), url("/assets/image/bgtracuu.png");
-        }
-
-        .vbcc-lookup-page .vbcc-theme-dark .vbcc-hero-logo span {
-          color: #fff !important;
+          --vbcc-dark-card: #22242a;
+          --vbcc-dark-text: #f6f7f9;
+          --vbcc-dark-muted: #a9abb4;
+          --vbcc-dark-border: rgba(255, 255, 255, .14);
+          --vbcc-dark-control: #2b2d34;
+          --vbcc-dark-control-hover: #383b44;
+          --vbcc-dark-primary: #244998;
+          --vbcc-dark-primary-hover: #315cba;
+          --vbcc-dark-focus: #8cbcff;
         }
 
         .vbcc-lookup-page .vbcc-hero-area {
@@ -445,38 +459,70 @@ const TraCuuVanBangChungChi = () => {
         }
 
         .vbcc-lookup-page .vbcc-theme-dark .vbcc-form-card {
-          background: rgba(20, 38, 61, .94) !important;
-          border: 1px solid rgba(255, 255, 255, .15) !important;
+          color: var(--vbcc-dark-text);
+          background: var(--vbcc-dark-card) !important;
+          border: 0 !important;
+          box-shadow: 0 4px 48px rgba(0, 0, 0, .3) !important;
         }
 
         .vbcc-lookup-page .vbcc-theme-dark .vbcc-form-heading h1,
         .vbcc-lookup-page .vbcc-theme-dark .vbcc-form label {
-          color: #fff !important;
+          color: var(--vbcc-dark-text) !important;
         }
 
         .vbcc-lookup-page .vbcc-theme-dark .vbcc-form-heading p {
-          color: rgba(255, 255, 255, .7) !important;
+          color: var(--vbcc-dark-muted) !important;
         }
 
         .vbcc-lookup-page .vbcc-theme-dark .vbcc-form-heading p.vbcc-form-prompt-error {
-          color: #dc2626 !important;
+          color: #fca5a5 !important;
         }
 
         .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="input"],
         .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-field"] {
-          color: #fff !important;
-          background: rgba(255, 255, 255, .08) !important;
-          border-color: rgba(255, 255, 255, .3) !important;
+          color: var(--vbcc-dark-text) !important;
+          background: var(--vbcc-dark-control) !important;
+          border-color: rgba(255, 255, 255, .24) !important;
         }
 
         .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="input"]::placeholder,
         .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-field"] [data-placeholder],
         .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-field"] [data-type="literal"] {
-          color: rgba(255, 255, 255, .65) !important;
+          color: var(--vbcc-dark-muted) !important;
         }
 
-        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-field"] [role="spinbutton"] {
-          color: #fff !important;
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-field"] [role="spinbutton"],
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-trigger"] {
+          color: var(--vbcc-dark-text) !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-reset-button {
+          color: var(--vbcc-dark-text) !important;
+          background: var(--vbcc-dark-control) !important;
+          border-color: var(--vbcc-dark-border) !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-reset-button:hover:not(:disabled) {
+          background: var(--vbcc-dark-control-hover) !important;
+          border-color: var(--vbcc-dark-focus) !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-search-button {
+          background: var(--vbcc-dark-primary) !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-search-button:hover:not(:disabled) {
+          background: var(--vbcc-dark-primary-hover) !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="input"]:focus-visible,
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form [data-slot="date-picker-field"]:focus-within {
+          border-color: var(--vbcc-dark-focus) !important;
+        }
+
+        .vbcc-lookup-page .vbcc-theme-dark .vbcc-form-action-buttons button:focus-visible {
+          outline: 2px solid var(--vbcc-dark-focus);
+          outline-offset: 2px;
         }
 
         .vbcc-lookup-page .vbcc-accreditation-strip {
@@ -598,32 +644,39 @@ const TraCuuVanBangChungChi = () => {
           }
 
           .vbcc-lookup-page .vbcc-mobile-accreditations {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            grid-template-rows: 184px 148px;
+            align-items: center;
+            justify-items: center;
             width: 100%;
             height: 348px;
-            overflow: hidden;
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 8px 12px;
+            box-sizing: border-box;
             background: #ffffff;
           }
 
-          .vbcc-lookup-page .vbcc-frame {
-            flex: none;
-            align-self: stretch;
+          .vbcc-lookup-page .vbcc-accreditation-logo {
             width: 100%;
-            background-image: url("/assets/image/bgfooter2.png");
-            background-repeat: no-repeat;
+            max-height: 100%;
           }
 
-          .vbcc-lookup-page .vbcc-frame--top {
-            height: 221px;
-            background-position: -218px 0;
-            background-size: 1384.35px 220.55px;
+          .vbcc-lookup-page .vbcc-accreditation-logo--work,
+          .vbcc-lookup-page .vbcc-accreditation-logo--fibaa {
+            grid-column: span 3;
+            height: 174px;
           }
 
-          .vbcc-lookup-page .vbcc-frame--bottom {
-            height: 127px;
-            background-position: -328px 0;
-            background-size: 797.89px 127px;
+          .vbcc-lookup-page .vbcc-accreditation-logo--qs {
+            grid-column: span 2;
+            height: 130px;
+          }
+
+          .vbcc-lookup-page .vbcc-accreditation-logo--stars {
+            grid-column: span 4;
+            height: 130px;
           }
 
           body.vbcc-lookup-active .footer-container {
