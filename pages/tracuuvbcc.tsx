@@ -65,9 +65,6 @@ const TraCuuVanBangChungChi = () => {
   const { resolvedTheme, setTheme } = useUi();
   const router = useRouter();
   const initialized = useRef(false);
-  const homeUrl = locale === "en-US"
-    ? "https://vinuni.edu.vn/"
-    : "https://vinuni.edu.vn/vi/trang-chu/";
 
   const [ds, setds] = useState([]);
   const [loading, setloading] = useState(false);
@@ -318,7 +315,7 @@ const TraCuuVanBangChungChi = () => {
                   <div className="vbcc-hero-header">
                     <a
                       className="vbcc-home-link"
-                      href={homeUrl}
+                      href="/"
                       aria-label={t("index.home_link")}
                     >
                       <Logo

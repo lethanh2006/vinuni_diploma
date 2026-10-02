@@ -1,6 +1,6 @@
 // @ts-nocheck
 module.exports = {
-  home_link: "VinUni homepage",
+  home_link: "Diploma verification homepage",
   question: "What qualification would you like to verify?",
   // prompt: "Please enter the information to search",
   prompt: "Please provide at least 2 of the 6 fields to verify qualification.",
