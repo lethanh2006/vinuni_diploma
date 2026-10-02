@@ -94,10 +94,6 @@ const FormTraCuuVBCC = (props) => {
 		const nextValues = { ...values, [name]: value };
 		setValues(nextValues);
 		if (!props.previewMode) saveLookupFormValues(nextValues);
-		const nextFilledFields = Object.values(nextValues).filter((value) =>
-			typeof value === "string" ? value.trim().length > 0 : Boolean(value),
-		).length;
-		if (nextFilledFields < 2) props.onReset?.();
 	};
 
 	const setField = (name) => (event) => {
