@@ -51,7 +51,7 @@ const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
                     variant="link"
                     size="sm"
                     type="button"
-                    iconRight={<IconChervolRight />}
+                    iconRight={<IconChervolRight size={20} />}
                     disabled={!data._id}
                     onClick={() => onViewDetail?.(record)}
                   >
@@ -134,6 +134,7 @@ const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
           box-sizing: border-box;
           width: 100%;
           border-top: 1px solid rgba(0, 0, 0, .1);
+          font-family: "Inter", sans-serif;
         }
         .vbcc-results-header {
           display: flex;
@@ -232,7 +233,10 @@ const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
           font-size: 14px;
           line-height: 20px;
         }
-        .vbcc-results-label { color: var(--result-muted); }
+        .vbcc-results-label {
+          color: var(--result-muted);
+          font-weight: 400;
+        }
         .vbcc-results-value {
           color: var(--result-text);
           font-weight: 500;
@@ -256,12 +260,26 @@ const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
           color: var(--vbcc-dark-focus) !important;
         }
         @media (max-width: 767px) {
-          .vbcc-results-header { padding: 16px 20px; }
-          .vbcc-results-list { padding: 0 20px 20px; }
-          .vbcc-results-item { min-height: 0; }
+          .vbcc-results-header { padding: 16px; }
+          .vbcc-results-list { padding: 0 16px 20px; }
+          .vbcc-results-item {
+            align-items: flex-start;
+            min-height: 268px;
+          }
+          .vbcc-results-item-top { width: 100%; }
           .vbcc-results-fields {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            row-gap: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+          }
+          .vbcc-results-field { width: 100%; }
+          .vbcc-results-label,
+          .vbcc-results-value {
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            overflow-wrap: anywhere;
           }
         }
         @media (max-width: 440px) {

@@ -3,20 +3,17 @@ import { Button, Card, CardContent, DatePicker, Input, Label } from "@vinuni/ui"
 import dynamic from "next/dynamic";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "components/Utils/useTranslation";
+import {
+	clearLookupFormValues,
+	emptyLookupFormValues as emptyValues,
+	readLookupFormValues,
+	saveLookupFormValues,
+} from "components/VanBangChungChi/lookupFormState";
 import ResultTraCuuVBCC from "./ResultTraCuuVBCC";
 
 const Turnstile = dynamic(() => import("react-turnstile"), { ssr: false });
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 const DEFAULT_LOOKUP_PURPOSE_ID = "69450705c63d2c9bb1ed80a7";
-
-const emptyValues = {
-	hoTen: "",
-	ngaySinh: null,
-	cccd: "",
-	maSinhVien: "",
-	soHieuVanBang: "",
-	soVaoSoBang: "",
-};
 
 const formatDob = (value) => {
 	if (!value) return undefined;
@@ -40,16 +37,27 @@ const FormTraCuuVBCC = (props) => {
 	const dateLocale = locale === "en-US" ? "en-GB" : "vi-VN";
 	const turnstileTokenRef = useRef("");
 	const boundTurnstileRef = useRef(null);
+	const minimumFieldsTimeoutRef = useRef(null);
+
+	const clearMinimumFieldsError = () => {
+		clearTimeout(minimumFieldsTimeoutRef.current);
+		minimumFieldsTimeoutRef.current = null;
+		setMinimumFieldsError(false);
+	};
 
 	useEffect(() => {
 		if (props.previewMode) {
 			setValues({ ...emptyValues, hoTen: "Song Song", maSinhVien: "ABC1200" });
+		} else {
+			setValues(readLookupFormValues());
 		}
 	}, [props.previewMode]);
 
 	useEffect(() => {
-		if (filledFields >= 2) setMinimumFieldsError(false);
+		if (filledFields >= 2) clearMinimumFieldsError();
 	}, [filledFields]);
+
+	useEffect(() => () => clearTimeout(minimumFieldsTimeoutRef.current), []);
 
 	const saveTurnstileToken = (token, bound) => {
 		if (bound) {
@@ -74,22 +82,35 @@ const FormTraCuuVBCC = (props) => {
 
 	const handleReset = () => {
 		setValues(emptyValues);
-		setMinimumFieldsError(false);
-		if (!props.previewMode) resetTurnstile();
+		clearMinimumFieldsError();
+		if (!props.previewMode) {
+			clearLookupFormValues();
+			resetTurnstile();
+		}
 		props.onReset?.();
 	};
 
+	const setValue = (name, value) => {
+		const nextValues = { ...values, [name]: value };
+		setValues(nextValues);
+		if (!props.previewMode) saveLookupFormValues(nextValues);
+	};
+
 	const setField = (name) => (event) => {
-		setValues((current) => ({ ...current, [name]: event.target.value }));
+		setValue(name, event.target.value);
 	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+		clearMinimumFieldsError();
 		if (filledFields < 2) {
 			setMinimumFieldsError(true);
+			minimumFieldsTimeoutRef.current = setTimeout(() => {
+				minimumFieldsTimeoutRef.current = null;
+				setMinimumFieldsError(false);
+			}, 5000);
 			return;
 		}
-		setMinimumFieldsError(false);
 		const turnstileToken = TURNSTILE_SITE_KEY && !props.previewMode ? getTurnstileToken() : "";
 		if (TURNSTILE_SITE_KEY && !props.previewMode && !turnstileToken) {
 			props.onWarning?.(t("index.messages.turnstile_required"));
@@ -137,7 +158,7 @@ const FormTraCuuVBCC = (props) => {
 							<DatePicker
 								locale={dateLocale}
 								value={values.ngaySinh}
-								onChange={(ngaySinh) => setValues((current) => ({ ...current, ngaySinh }))}
+								onChange={(ngaySinh) => setValue("ngaySinh", ngaySinh)}
 								aria-label={t("index.form.dob")}
 							/>
 						</Field>

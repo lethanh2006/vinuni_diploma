@@ -65,6 +65,9 @@ const TraCuuVanBangChungChi = () => {
   const { resolvedTheme, setTheme } = useUi();
   const router = useRouter();
   const initialized = useRef(false);
+  const homeUrl = locale === "en-US"
+    ? "https://vinuni.edu.vn/"
+    : "https://vinuni.edu.vn/vi/trang-chu/";
 
   const [ds, setds] = useState([]);
   const [loading, setloading] = useState(false);
@@ -313,12 +316,18 @@ const TraCuuVanBangChungChi = () => {
                 >
                   <div className="vbcc-hero-background" aria-hidden="true" />
                   <div className="vbcc-hero-header">
-                    <Logo
-                      layout="horizontal"
-                      theme="color"
-                      tagline="Diploma Verification Portal"
-                      className="vbcc-hero-logo"
-                    />
+                    <a
+                      className="vbcc-home-link"
+                      href={homeUrl}
+                      aria-label={t("index.home_link")}
+                    >
+                      <Logo
+                        layout="horizontal"
+                        theme="color"
+                        tagline="Diploma Verification Portal"
+                        className="vbcc-hero-logo"
+                      />
+                    </a>
                   </div>
                   <div className="vbcc-hero-area">
                     <div className="vbcc-hero-form">

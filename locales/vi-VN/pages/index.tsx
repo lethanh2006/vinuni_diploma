@@ -1,5 +1,6 @@
 // @ts-nocheck
 module.exports = {
+  home_link: "Trang chủ VinUni",
   question: "Bạn muốn tra cứu văn bằng chứng chỉ gì?",
   // prompt: "Vui lòng nhập thông tin để tra cứu",
   prompt: "Vui lòng cung cấp ít nhất 2 trong 6 trường để xác minh văn bằng.",
