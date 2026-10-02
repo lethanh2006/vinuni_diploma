@@ -65,6 +65,7 @@ const TraCuuVanBangChungChi = () => {
   const { resolvedTheme, setTheme } = useUi();
   const router = useRouter();
   const initialized = useRef(false);
+  const lookupRequestIdRef = useRef(0);
 
   const [ds, setds] = useState([]);
   const [loading, setloading] = useState(false);
@@ -159,6 +160,7 @@ const TraCuuVanBangChungChi = () => {
       return false;
     }
 
+    const requestId = ++lookupRequestIdRef.current;
     setloading(true);
     setds([]);
     clearLookupRecords();
@@ -175,6 +177,7 @@ const TraCuuVanBangChungChi = () => {
             : {}),
         },
       );
+      if (requestId !== lookupRequestIdRef.current) return false;
       const arr = data?.data?.data?.result ?? [];
       if (!Array.isArray(arr) || arr.length === 0) {
         setds({ Error: true });
@@ -183,6 +186,7 @@ const TraCuuVanBangChungChi = () => {
         saveLookupRecords(arr);
       }
     } catch (error) {
+      if (requestId !== lookupRequestIdRef.current) return false;
       const errorCode = error?.response?.data?.code;
       let messageKey = "index.messages.lookup_failed";
       if (errorCode === "error-turnstile-token-required") {
@@ -196,7 +200,7 @@ const TraCuuVanBangChungChi = () => {
       showNotification(t(messageKey));
       setds([]);
     } finally {
-      setloading(false);
+      if (requestId === lookupRequestIdRef.current) setloading(false);
       resetTurnstile?.();
     }
 
@@ -347,6 +351,8 @@ const TraCuuVanBangChungChi = () => {
                             previewMode={previewMode}
                             onViewDetail={viewDetail}
                             onReset={() => {
+                              lookupRequestIdRef.current += 1;
+                              setloading(false);
                               setds([]);
                               clearLookupRecords();
                               if (detailId)
