@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { IconCheckCircle, IconDownload, IconGraduationScroll, IconInfoCircle, IconNotebook01, LecxeEmptyNoData } from "@vinuni/ui";
+import { IconCheckCircle, IconGraduationScroll, IconInfoCircle, IconNotebook01, LecxeEmptyNoData, LiquidButton } from "@vinuni/ui";
 import moment from "moment";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "components/Utils/useTranslation";
@@ -51,13 +51,6 @@ const DetailSection = ({ title, Icon, items }) => (
     </h2>
     <InfoGrid items={items} />
   </section>
-);
-
-const PrintIcon = () => (
-  <svg className="vbcc-detail-action-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-    <path d="M6 15h12v6H6zM18 12h.01" />
-  </svg>
 );
 
 const ChiTietVanBang = ({ record: item }) => {
@@ -139,12 +132,12 @@ const ChiTietVanBang = ({ record: item }) => {
           {t("detail.page_title")}
         </h2>
         <div className="vbcc-detail-actions" data-pdf-ignore>
-          <button type="button" className="vbcc-detail-toolbar-button vbcc-detail-print" onClick={() => window.print()} aria-label={t("detail.print")}>
-            <PrintIcon /><span className="vbcc-detail-action-label">{t("detail.print")}</span>
-          </button>
-          <button type="button" className="vbcc-detail-toolbar-button vbcc-detail-download" onClick={handleDownload} disabled={downloading || !record?._id} aria-busy={downloading} aria-label={downloading ? t("detail.downloading") : t("detail.download")} title={t("detail.download")}>
-            <IconDownload className="vbcc-detail-action-icon" size={24} aria-hidden="true" /><span className="vbcc-detail-action-label">{downloading ? t("detail.downloading") : t("detail.download")}</span>
-          </button>
+          <LiquidButton theme="primary" size="default" type="button" className="vbcc-detail-print" onClick={() => window.print()} aria-label={t("detail.print")}>
+            <span className="vbcc-detail-action-label">{t("detail.print")}</span>
+          </LiquidButton>
+          <LiquidButton theme="primary" size="default" type="button" className="vbcc-detail-download" onClick={handleDownload} disabled={downloading || !record?._id} aria-busy={downloading} aria-label={downloading ? t("detail.downloading") : t("detail.download")} title={t("detail.download")}>
+            <span className="vbcc-detail-action-label">{downloading ? t("detail.downloading") : t("detail.download")}</span>
+          </LiquidButton>
         </div>
       </div>
       {downloadError ? <p className="vbcc-detail-download-error" role="alert" data-pdf-ignore>{t("detail.download_failed")}</p> : null}

@@ -63,64 +63,30 @@
 .vbcc-detail-actions {
   display: flex;
   flex: none;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
   justify-content: flex-end;
   gap: 12px;
   min-width: 189px;
   height: 44px;
 }
 
-.vbcc-detail-toolbar-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-width: 44px;
-  height: 44px;
-  padding: 0 16px;
-  color: #111;
-  font: 500 16px/24px "Inter", sans-serif;
-  text-decoration: none;
-  white-space: nowrap;
-  background: rgba(255, 255, 255, .82);
-  border: 1px solid rgba(0, 0, 0, .06);
-  border-radius: 999px;
-  box-shadow: 0 2px 24px rgba(0, 0, 0, .12);
-  backdrop-filter: blur(8px);
-  cursor: pointer;
-}
-
-.vbcc-detail-toolbar-button:hover:not(:disabled),
-.vbcc-detail-toolbar-button:focus-visible {
-  color: #134d8b;
-  border-color: rgba(19, 77, 139, .35);
-}
-
-.vbcc-detail-toolbar-button:disabled {
-  cursor: not-allowed;
-  opacity: .55;
+.vbcc-detail-print {
+  min-width: 68px;
 }
 
 .vbcc-detail-download {
-  color: #fff;
-  background: #39599d;
-  border-color: transparent;
+  min-width: 109px;
 }
 
-.vbcc-detail-download:hover:not(:disabled),
-.vbcc-detail-download:focus-visible {
-  color: #fff;
-  background: #134d8b;
+.vbcc-detail-action-label {
+  font: 500 16px/24px "Inter", sans-serif;
 }
 
 .vbcc-detail-download-error {
   margin: 8px 16px 0;
   color: #b91c1c;
   font-size: 14px;
-}
-
-.vbcc-detail-action-icon {
-  display: none;
 }
 
 .vbcc-detail-body {
@@ -310,37 +276,6 @@
   color: var(--vbcc-dark-text, #f6f7f9);
 }
 
-.vbcc-theme-dark .vbcc-detail-toolbar-button:focus-visible {
-  outline: 2px solid var(--vbcc-dark-focus, #8cbcff);
-  outline-offset: 2px;
-}
-
-.vbcc-theme-dark .vbcc-detail-toolbar-button {
-  color: var(--vbcc-dark-text, #f6f7f9);
-  background: var(--vbcc-dark-control, #2b2d34);
-  border-color: rgba(255, 255, 255, .12);
-  box-shadow: 0 2px 24px rgba(0, 0, 0, .22);
-}
-
-.vbcc-theme-dark .vbcc-detail-toolbar-button:hover:not(:disabled),
-.vbcc-theme-dark .vbcc-detail-toolbar-button:focus-visible {
-  color: #fff;
-  background: var(--vbcc-dark-control-hover, #383b44);
-  border-color: var(--vbcc-dark-focus, #8cbcff);
-}
-
-.vbcc-theme-dark .vbcc-detail-download {
-  color: #fff;
-  background: var(--vbcc-dark-primary, #244998);
-  border-color: transparent;
-}
-
-.vbcc-theme-dark .vbcc-detail-download:hover:not(:disabled),
-.vbcc-theme-dark .vbcc-detail-download:focus-visible {
-  background: var(--vbcc-dark-primary-hover, #315cba);
-  border-color: var(--vbcc-dark-focus, #8cbcff);
-}
-
 .vbcc-theme-dark .vbcc-detail-student,
 .vbcc-theme-dark .vbcc-detail-information {
   background: rgba(255, 255, 255, .015);
@@ -367,47 +302,17 @@
   }
 
   .vbcc-detail-toolbar {
-    height: 52px;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 60px;
     padding: 16px 16px 0;
     gap: 12px;
   }
 
   .vbcc-detail-title {
+    flex: 1 1 auto;
     height: 44px;
     padding: 6px 0;
-  }
-
-  .vbcc-detail-actions {
-    gap: 12px;
-    min-width: 0;
-  }
-
-  .vbcc-detail-toolbar-button {
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
-    padding: 0;
-  }
-
-  .vbcc-detail-download {
-    color: #111;
-    background: rgba(255, 255, 255, .9);
-    border-color: rgba(0, 0, 0, .06);
-  }
-
-  .vbcc-detail-download:hover:not(:disabled),
-  .vbcc-detail-download:focus-visible {
-    color: #134d8b;
-    background: #fff;
-  }
-
-  .vbcc-detail-action-icon {
-    display: block;
-    flex: none;
-  }
-
-  .vbcc-detail-action-label {
-    display: none;
   }
 
   .vbcc-detail-body {

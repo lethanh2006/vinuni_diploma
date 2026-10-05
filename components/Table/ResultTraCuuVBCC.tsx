@@ -1,11 +1,12 @@
 // @ts-nocheck
-import { Badge, Button, IconChervolRight, LecxeEmptyNoData } from "@vinuni/ui";
+import { Badge, IconChervolRight, LecxeEmptyNoData } from "@vinuni/ui";
 import moment from "moment";
-import React from "react";
+import React, { useId } from "react";
 import { useTranslation } from "components/Utils/useTranslation";
 
 const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
   const { t } = useTranslation();
+  const resultId = useId();
   const records = Array.isArray(thongTinTraCuu) ? thongTinTraCuu : [];
   const hasError = Boolean(thongTinTraCuu?.Error);
 
@@ -43,30 +44,31 @@ const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
             ];
 
             return (
-              <article className="vbcc-results-item" key={record?._id || data._id || index}>
-                <div className="vbcc-results-item-top">
+              <button
+                className="vbcc-results-item"
+                key={record?._id || data._id || index}
+                type="button"
+                disabled={!data._id || typeof onViewDetail !== "function"}
+                aria-label={`${t("index.table.view_detail")}: ${data.hoTen || "—"}`}
+                aria-describedby={`${resultId}-fields-${index}`}
+                onClick={() => onViewDetail?.(record)}
+              >
+                <span className="vbcc-results-item-top">
                   <span className="vbcc-results-name">{data.hoTen || "—"}</span>
-                  <Button
-                    className="vbcc-results-detail"
-                    variant="link"
-                    size="sm"
-                    type="button"
-                    iconRight={<IconChervolRight size={20} />}
-                    disabled={!data._id}
-                    onClick={() => onViewDetail?.(record)}
-                  >
+                  <span className="vbcc-results-detail" aria-hidden="true">
                     {t("index.table.view_detail")}
-                  </Button>
-                </div>
-                <div className="vbcc-results-fields">
+                    <IconChervolRight size={20} aria-hidden="true" />
+                  </span>
+                </span>
+                <span className="vbcc-results-fields" id={`${resultId}-fields-${index}`}>
                   {fields.map((field) => (
-                    <div className="vbcc-results-field" key={field.label}>
+                    <span className="vbcc-results-field" key={field.label}>
                       <span className="vbcc-results-label">{field.label}</span>
                       <span className="vbcc-results-value">{field.value || "—"}</span>
-                    </div>
+                    </span>
                   ))}
-                </div>
-              </article>
+                </span>
+              </button>
             );
             })}
           </div>
@@ -129,6 +131,9 @@ const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
           --result-text: #000;
           --result-muted: rgba(0, 0, 0, .6);
           --result-tile: rgba(0, 0, 0, .03);
+          --result-tile-hover: rgba(0, 0, 0, .06);
+          --result-tile-press: rgba(0, 0, 0, .1);
+          --result-focus: #134d8b;
           display: flex;
           flex-direction: column;
           box-sizing: border-box;
@@ -180,8 +185,32 @@ const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
           width: 100%;
           min-height: 100px;
           padding: 12px 16px;
+          color: var(--result-text);
+          font: inherit;
+          text-align: left;
           background: var(--result-tile);
+          border: 0;
           border-radius: 8px;
+          cursor: pointer;
+          transition: background-color .16s ease-out;
+        }
+        @media (hover: hover) {
+          .vbcc-results-item:hover:not(:disabled) {
+            background: var(--result-tile-hover);
+          }
+        }
+        .vbcc-results-item:active:not(:disabled) {
+          background: var(--result-tile-press);
+        }
+        .vbcc-results-item:focus-visible {
+          outline: 2px solid var(--result-focus);
+          outline-offset: 2px;
+        }
+        .vbcc-results-item:disabled {
+          cursor: default;
+        }
+        .vbcc-results-item:disabled .vbcc-results-detail {
+          opacity: .5;
         }
         .vbcc-results-item-top {
           display: flex;
@@ -198,20 +227,17 @@ const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
           line-height: 24px;
           overflow-wrap: anywhere;
         }
-        :global(.vbcc-results-detail) {
+        .vbcc-results-detail {
+          display: inline-flex;
+          align-items: center;
           flex: none;
-          height: 20px !important;
-          padding: 0 !important;
-          gap: 4px !important;
-          color: #134d8b !important;
-          font-size: 14px !important;
-          font-weight: 500 !important;
-          line-height: 20px !important;
-          text-decoration: none !important;
-        }
-        :global(.vbcc-results-detail svg) {
-          width: 20px;
           height: 20px;
+          gap: 4px;
+          color: var(--result-focus);
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 20px;
+          white-space: nowrap;
         }
         .vbcc-results-fields {
           display: grid;
@@ -254,10 +280,13 @@ const ResultTraCuuVBCC = ({ thongTinTraCuu, onViewDetail }) => {
           --result-text: var(--vbcc-dark-text);
           --result-muted: var(--vbcc-dark-muted);
           --result-tile: var(--vbcc-dark-control);
+          --result-tile-hover: var(--vbcc-dark-control-hover, #383b44);
+          --result-tile-press: #42454d;
+          --result-focus: var(--vbcc-dark-focus, #8cbcff);
           border-top-color: var(--vbcc-dark-border);
         }
-        :global(.vbcc-theme-dark) :global(.vbcc-results-detail) {
-          color: var(--vbcc-dark-focus) !important;
+        @media (prefers-reduced-motion: reduce) {
+          .vbcc-results-item { transition: none; }
         }
         @media (max-width: 767px) {
           .vbcc-results-header { padding: 16px; }
