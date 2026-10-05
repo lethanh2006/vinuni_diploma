@@ -392,7 +392,6 @@
   body.vbcc-lookup-active [data-slot="sidebar-dock"],
   body.vbcc-lookup-active [data-slot="sidebar-dock-gap"],
   body.vbcc-lookup-active .vbcc-hero-header,
-  body.vbcc-lookup-active .vbcc-accreditation-strip,
   body.vbcc-lookup-active footer {
     display: none !important;
   }
@@ -588,12 +587,10 @@ body.vbcc-lookup-active header {
 }
 
 .vbcc-lookup-page .vbcc-hero-logo {
-  transform: scale(1.25);
-  transform-origin: left top;
-}
-
-.vbcc-lookup-page .vbcc-hero-logo span {
-  color: #111 !important;
+  display: block;
+  width: 272px;
+  height: 64px;
+  object-fit: contain;
 }
 
 .vbcc-lookup-page .vbcc-theme-dark {
@@ -704,22 +701,6 @@ body.vbcc-lookup-active header {
   outline-offset: 2px;
 }
 
-.vbcc-lookup-page .vbcc-accreditation-strip {
-  width: 100%;
-  overflow: hidden;
-  background: #ffffff;
-}
-
-.vbcc-lookup-page .vbcc-accreditation-strip img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.vbcc-lookup-page .vbcc-mobile-accreditations {
-  display: none;
-}
-
 @media (max-width: 767px) {
   .vbcc-lookup-page .vbcc-page-shell {
     flex-direction: column;
@@ -804,7 +785,8 @@ body.vbcc-lookup-active header {
   }
 
   .vbcc-lookup-page .vbcc-hero-logo {
-    transform: scale(0.9);
+    width: 153px;
+    height: 36px;
   }
 
   .vbcc-lookup-page .vbcc-hero-area {
@@ -814,51 +796,6 @@ body.vbcc-lookup-active header {
 
   .vbcc-lookup-page .vbcc-hero--detail .vbcc-hero-area {
     padding-top: 24px;
-  }
-
-  .vbcc-lookup-page .vbcc-accreditation-strip {
-    height: 348px;
-    background: #ffffff;
-  }
-
-  .vbcc-lookup-page .vbcc-accreditation-strip img {
-    display: none;
-  }
-
-  .vbcc-lookup-page .vbcc-mobile-accreditations {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-template-rows: 184px 148px;
-    align-items: center;
-    justify-items: center;
-    width: 100%;
-    height: 348px;
-    max-width: 440px;
-    margin: 0 auto;
-    padding: 8px 12px;
-    box-sizing: border-box;
-    background: #ffffff;
-  }
-
-  .vbcc-lookup-page .vbcc-accreditation-logo {
-    width: 100%;
-    max-height: 100%;
-  }
-
-  .vbcc-lookup-page .vbcc-accreditation-logo--work,
-  .vbcc-lookup-page .vbcc-accreditation-logo--fibaa {
-    grid-column: span 3;
-    height: 174px;
-  }
-
-  .vbcc-lookup-page .vbcc-accreditation-logo--qs {
-    grid-column: span 2;
-    height: 130px;
-  }
-
-  .vbcc-lookup-page .vbcc-accreditation-logo--stars {
-    grid-column: span 4;
-    height: 130px;
   }
 
   body.vbcc-lookup-active .footer-container {

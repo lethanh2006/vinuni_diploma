@@ -7,7 +7,6 @@ import {
   DialogTitle,
   IconMoon,
   IconSun,
-  Logo,
   SidebarDock,
   SidebarDockBrand,
   SidebarDockFooter,
@@ -322,10 +321,11 @@ const TraCuuVanBangChungChi = () => {
                       href="/"
                       aria-label={t("index.home_link")}
                     >
-                      <Logo
-                        layout="horizontal"
-                        theme="color"
-                        tagline="Diploma Verification Portal"
+                      <img
+                        src="/assets/image/textngang.png"
+                        alt="VinUniversity — Diploma Verification Portal"
+                        width={272}
+                        height={64}
                         className="vbcc-hero-logo"
                       />
                     </a>
@@ -365,62 +365,6 @@ const TraCuuVanBangChungChi = () => {
                         </>
                       )}
                     </div>
-                  </div>
-                </div>
-                <div className="vbcc-accreditation-strip">
-                  <img
-                    src="/assets/image/bgfooter2.png"
-                    alt="VinUniversity accreditations and rankings"
-                  />
-                  <div
-                    className="vbcc-mobile-accreditations"
-                    role="img"
-                    aria-label="VinUniversity accreditations and rankings"
-                  >
-                    <svg
-                      className="vbcc-accreditation-logo vbcc-accreditation-logo--work"
-                      viewBox="490 70 195 300"
-                      aria-hidden="true"
-                    >
-                      <image
-                        href="/assets/image/bgfooter2.png"
-                        width="2517"
-                        height="401"
-                      />
-                    </svg>
-                    <svg
-                      className="vbcc-accreditation-logo vbcc-accreditation-logo--fibaa"
-                      viewBox="780 70 235 300"
-                      aria-hidden="true"
-                    >
-                      <image
-                        href="/assets/image/bgfooter2.png"
-                        width="2517"
-                        height="401"
-                      />
-                    </svg>
-                    <svg
-                      className="vbcc-accreditation-logo vbcc-accreditation-logo--qs"
-                      viewBox="1140 75 250 260"
-                      aria-hidden="true"
-                    >
-                      <image
-                        href="/assets/image/bgfooter2.png"
-                        width="2517"
-                        height="401"
-                      />
-                    </svg>
-                    <svg
-                      className="vbcc-accreditation-logo vbcc-accreditation-logo--stars"
-                      viewBox="1530 80 680 240"
-                      aria-hidden="true"
-                    >
-                      <image
-                        href="/assets/image/bgfooter2.png"
-                        width="2517"
-                        height="401"
-                      />
-                    </svg>
                   </div>
                 </div>
               </div>
